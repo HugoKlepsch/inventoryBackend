@@ -14,10 +14,9 @@ echo "Connected"
 
 FLASK_APP=serverRun.py flask run --host='0.0.0.0' --port=8080
 
+echo "Job failed, sleeping..."
 while true; do
   sleep 1
-  ping inventorydb.inventory
-  echo "sleeping"
 done
 
 echo "done"

@@ -19,5 +19,5 @@ set +x
 
 echo "To see logs of db, type 'docker logs -f inventorydb'"
 echo "To see logs of server, type 'docker logs -f inventoryserver'"
-echo "View website at http://localhost:1269"
+echo "View website at http://localhost:1221"
 

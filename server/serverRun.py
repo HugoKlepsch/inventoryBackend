@@ -10,9 +10,9 @@ app.secret_key = 'yeetyeetskeetskeet'
 
 db = DB()
 
-def only_logged_in():
+def only_logged_in(f):
     @wraps(f)
-    def _only_logged_in(f):
+    def _only_logged_in(*args, **kwargs):
         # just do here everything what you need
 
         if not 'username' in session:
@@ -23,9 +23,9 @@ def only_logged_in():
         return result
     return _only_logged_in
 
-def only_logged_out(redirect_to):
+def only_logged_out(f, redirect_to):
     @wraps(f)
-    def _only_logged_out(f):
+    def _only_logged_out(*args, **kwargs):
         # just do here everything what you need
 
         if 'username' in session:
@@ -37,7 +37,7 @@ def only_logged_out(redirect_to):
     return _only_logged_out
 
 @app.route('/protected')
-@only_logged_in()
+@only_logged_in
 def protected_page():
     return "This is a protected page. Congrats you logged in" + \
         """<form action="/logout" method="post"> <button type="submit">Log out</button> </form>"""
@@ -78,3 +78,5 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('catch_route'))
 
+if __name__ == '__main__':
+    app.run(debug=True)
