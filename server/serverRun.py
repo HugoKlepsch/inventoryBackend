@@ -1,12 +1,13 @@
-from flask import Flask, session, redirect, url_for, escape, request, render_template, send_from_directory
-import json
 from functools import wraps
-import sys
 import hashlib
+from os import environ
+
+from flask import Flask, session, redirect, url_for, request
+
 from db import DB
 
 app = Flask(__name__, template_folder="templates")
-app.secret_key = 'yeetyeetskeetskeet'
+app.secret_key = environ['APP_SECRET_KEY']
 
 db = DB()
 

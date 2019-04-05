@@ -12,7 +12,7 @@ done
 
 echo "Connected"
 
-FLASK_APP=serverRun.py flask run --host='0.0.0.0' --port=8080
+uwsgi --socket 0.0.0.0:8080 --protocol=http -w main:app
 
 echo "Job failed, sleeping..."
 while true; do
