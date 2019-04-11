@@ -1,13 +1,19 @@
-import psycopg2
+import MySQLdb
 
-class DB:
+
+class DB(object):
     _db = None
 
+    def __init__(self, host, port):
+        self.host = host
+        self.port = port
+
     def _connect(self):
-        self._db = psycopg2.connect(host="inventorydb.inventory", 
-                                    user="root", 
-                                    password="notwaterloo", 
-                                    dbname="inventorydb")
+        self._db = MySQLdb.connect(host=self.host,
+                                   port=self.port,
+                                   user="root",
+                                   password="notwaterloo",
+                                   dbname="inventorydb")
 
     def execute(self, *args, **kwargs):
         try:

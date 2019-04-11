@@ -7,7 +7,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir inventory
 
-RUN pip install --no-cache-dir --trusted-host curl psycopg2-binary requests Flask
+RUN pip install --no-cache-dir --trusted-host curl requests Flask mysqlclient
 
 COPY . inventory
 
