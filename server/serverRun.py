@@ -3,16 +3,15 @@ import hashlib
 import os
 
 from flask import Flask, session, redirect, url_for, request
+from flask_sqlalchemy import SQLAlchemy
 
-from server.db import DB
 
 app = Flask(__name__, template_folder="templates")
 app.secret_key = 'yeetyeetskeetskeet'
-db_host = os.environ.get('DBHOST', 'localhost')
+db_host = os.environ.get('DBHOST', '127.0.0.1')
 db_port = int(os.environ.get('DBPORT', 3301))
 
-db = DB(host=db_host, port=db_port)
-db._connect()
+db = SQLAlchemy()
 
 
 def only_logged_in(f):

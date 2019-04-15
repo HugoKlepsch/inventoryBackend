@@ -7,7 +7,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir inventory
 
-RUN pip install --no-cache-dir --trusted-host curl requests Flask mysqlclient
+RUN pip install --no-cache-dir --trusted-host curl requests Flask mysqlclient flask_sqlalchemy
 
 COPY . inventory
 

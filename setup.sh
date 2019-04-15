@@ -4,4 +4,4 @@ python -m venv venv --system-site-packages
 
 . venv/bin/activate
 
-pip install Flask psycopg2-binary requests mysqlclient
+pip install Flask requests mysqlclient flask_sqlalchemy

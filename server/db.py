@@ -13,7 +13,7 @@ class DB(object):
                                    port=self.port,
                                    user="root",
                                    password="notwaterloo",
-                                   dbname="inventorydb")
+                                   db="inventorydb")
 
     def execute(self, *args, **kwargs):
         try:
