@@ -3,6 +3,8 @@ FROM python:3-slim-stretch
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     mariadb-client \
+    build-essential \
+    default-libmysqlclient-dev \
     iputils-ping && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir inventory
