@@ -11,7 +11,7 @@ docker rm inventoryserver || true
 sleep 1
 
 echo "Starting server container..."
-docker run --env-file env.env -d -p 1221:8080 --net inventory --name inventoryserver inventoryserver:latest
+docker run --env-file server/env.env -d -p 1221:8080 --net inventory --name inventoryserver inventoryserver:latest
 set +x
 
 echo "To see logs of server, type 'docker logs -f inventoryserver'"
