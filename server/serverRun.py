@@ -1,18 +1,32 @@
 from functools import wraps
 import hashlib
 import os
+from urllib import parse
 
 from flask import Flask, session, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 
-
 app = Flask(__name__, template_folder="templates")
 app.secret_key = 'yeetyeetskeetskeet'
+
 db_host = os.environ.get('DBHOST', '127.0.0.1')
 db_port = int(os.environ.get('DBPORT', 3301))
+db_password = os.environ.get('DBPASS', 'notwaterloo')
+db_database = 'inventorydb'
 
-db = SQLAlchemy()
+db_string = "mysql://root:{password}@{host}:{port}/{database}".format(
+    password=db_password,
+    host=db_host,
+    port=db_port,
+    database=db_database
+)
+app.config['SQLALCHEMY_DATABASE_URI'] = db_string
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+db = SQLAlchemy(app)
+
+import models
+models.create_tables()
 
 def only_logged_in(f):
     @wraps(f)
@@ -56,13 +70,14 @@ def login():
     name = request.form['username'].encode('utf-8')
     password_hash = hashlib.md5(request.form['password'].encode('utf-8')).hexdigest()
 
-    cursor = db.execute("SELECT A_USERNAME from ACCOUNT_INFO where A_USERNAME=%s AND A_PASSWORD=%s",
-                        (name, password_hash,))
-    if not cursor.fetchone():
-        return "Login details incorrect"
-    else:
-        session['username'] = name
-        return redirect(url_for('user_account'))
+    return "Login details incorrect"
+#    cursor = db.execute("SELECT A_USERNAME from ACCOUNT_INFO where A_USERNAME=%s AND A_PASSWORD=%s",
+#                        (name, password_hash,))
+#    if not cursor.fetchone():
+#        return "Login details incorrect"
+#    else:
+#        session['username'] = name
+#        return redirect(url_for('user_account'))
 
 
 @app.route('/signup', methods=['POST'])
@@ -71,17 +86,18 @@ def signup():
     password_hash = hashlib.md5(request.form['password'].encode('utf-8')).hexdigest()
     email = request.form['email'].encode('utf-8')
 
-    cursor = db.execute("SELECT A_USERNAME, A_EMAIL from ACCOUNT_INFO where A_USERNAME=%s OR A_EMAIL=%s",
-                        (name, email))
-    if cursor.fetchone():
-        return "Username or email already taken"
+    return "Signup stub"
+    #cursor = db.execute("SELECT A_USERNAME, A_EMAIL from ACCOUNT_INFO where A_USERNAME=%s OR A_EMAIL=%s",
+    #                    (name, email))
+    #if cursor.fetchone():
+    #    return "Username or email already taken"
 
-    cursor.execute("""INSERT into ACCOUNT_INFO (A_USERNAME, A_PASSWORD, A_EMAIL) VALUES (%s, %s, %s)""",
-                   (name, password_hash, email,))
+    #cursor.execute("""INSERT into ACCOUNT_INFO (A_USERNAME, A_PASSWORD, A_EMAIL) VALUES (%s, %s, %s)""",
+    #               (name, password_hash, email,))
 
-    db.commit()
+    #db.commit()
 
-    return redirect(url_for('catch_route'))
+    #return redirect(url_for('catch_route'))
 
 
 @app.route('/logout', methods=['POST'])
