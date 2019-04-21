@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from server.serverRun import db, app
+from db import db
 
 
 class User(db.Model):
@@ -12,6 +12,7 @@ class User(db.Model):
     email = db.Column(db.String(120), nullable=False)
     password_hash = db.Column(db.String(64), nullable=False)
     create_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    items = db.relationship('Item', backref='user', lazy=True)
 
 
 class Item(db.Model):
@@ -19,7 +20,8 @@ class Item(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     create_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey(User.__tablename__ + 'id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.__tablename__ + '.id'), nullable=False)
+    pictures = db.relationship('Picture', backref='item', lazy=True)
 
 
 class Picture(db.Model):
@@ -27,10 +29,6 @@ class Picture(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     create_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    item_id = db.Column(db.Integer, db.ForeignKey(Item.__tablename__ + 'id'), nullable=False)
+    item_id = db.Column(db.Integer, db.ForeignKey(Item.__tablename__ + '.id'), nullable=False)
 
 
-def create_tables():
-    db.create_all()
-    db.session.commit()
-    app.logger.debug("Created databases")

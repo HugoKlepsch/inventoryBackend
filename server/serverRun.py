@@ -1,32 +1,62 @@
 from functools import wraps
 import hashlib
+import logging
 import os
-from urllib import parse
 
 from flask import Flask, session, redirect, url_for, request
-from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__, template_folder="templates")
-app.secret_key = 'yeetyeetskeetskeet'
+from db import db
+from models import User, Item, Picture
 
-db_host = os.environ.get('DBHOST', '127.0.0.1')
-db_port = int(os.environ.get('DBPORT', 3301))
-db_password = os.environ.get('DBPASS', 'notwaterloo')
-db_database = 'inventorydb'
 
-db_string = "mysql://root:{password}@{host}:{port}/{database}".format(
-    password=db_password,
-    host=db_host,
-    port=db_port,
-    database=db_database
-)
-app.config['SQLALCHEMY_DATABASE_URI'] = db_string
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+def create_app():
+    _app = Flask(__name__, template_folder="templates")
+    _app.secret_key = 'yeetyeetskeetskeet'
+    _app.logger.setLevel(logging.DEBUG)
 
-db = SQLAlchemy(app)
+    db_host = os.environ.get('DBHOST', '127.0.0.1')
+    db_port = int(os.environ.get('DBPORT', 3301))
+    db_password = os.environ.get('DBPASS', 'notwaterloo')
+    db_database = 'inventorydb'
+    db_string = "mysql://root:{password}@{host}:{port}/{database}".format(
+        password=db_password,
+        host=db_host,
+        port=db_port,
+        database=db_database
+    )
+    _app.config['SQLALCHEMY_DATABASE_URI'] = db_string
+    _app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-import models
-models.create_tables()
+    db.init_app(_app)
+
+    return _app
+
+
+def setup_database(_app):
+    with _app.app_context():
+        _app.logger.info("Creating databases")
+        db.create_all()
+        db.session.commit()
+        _app.logger.info("Created databases")
+
+        _app.logger.info("Creating test user, item, picture")
+        example_user = User(username='bugmommy',
+                            name='Tracy',
+                            email='test@email.com',
+                            password_hash='asdf')
+        example_item = Item(user_id=example_user.id)
+        example_picture = Picture(item_id=example_item.id)
+
+        db.session.add(example_user)
+        db.session.add(example_item)
+        db.session.add(example_picture)
+        db.session.commit()
+        _app.logger.info("Created test user, item, picture")
+
+
+app = create_app()
+setup_database(app)
+
 
 def only_logged_in(f):
     @wraps(f)
@@ -67,10 +97,16 @@ def protected_page():
 
 @app.route('/login', methods=['POST'])
 def login():
-    name = request.form['username'].encode('utf-8')
+    username = request.form['username'].encode('utf-8')
     password_hash = hashlib.md5(request.form['password'].encode('utf-8')).hexdigest()
 
-    return "Login details incorrect"
+    user = User.query.filter_by(username=username, password_hash=password_hash)
+
+    if user is None:
+        return "Login details incorrect"
+    else:
+        session['username'] = username
+        return 'Logged in'
 #    cursor = db.execute("SELECT A_USERNAME from ACCOUNT_INFO where A_USERNAME=%s AND A_PASSWORD=%s",
 #                        (name, password_hash,))
 #    if not cursor.fetchone():
@@ -119,4 +155,4 @@ def hello_world():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=8080)
