@@ -35,22 +35,35 @@ def create_app():
 def setup_database(_app):
     with _app.app_context():
         _app.logger.info("Creating databases")
+        db.drop_all()
         db.create_all()
         db.session.commit()
         _app.logger.info("Created databases")
 
-        _app.logger.info("Creating test user, item, picture")
-        example_user = User(username='bugmommy',
-                            name='Tracy',
-                            email='test@email.com',
-                            password_hash='asdf')
-        example_item = Item(user_id=example_user.id)
-        example_picture = Picture(item_id=example_item.id)
+        example_user = User.query.filter_by(username='bugmommy').first()
+        if example_user is None:
+            _app.logger.info("Creating test user")
+            example_user = User(username='bugmommy',
+                                name='Tracy',
+                                email='test@email.com',
+                                password_hash='asdf')
+            db.session.add(example_user)
+            db.session.commit()
 
-        db.session.add(example_user)
-        db.session.add(example_item)
-        db.session.add(example_picture)
-        db.session.commit()
+        example_item = Item.query.filter_by(user_id=example_user.id).first()
+        if example_item is None:
+            _app.logger.info("Creating test item")
+            example_item = Item(user_id=example_user.id)
+            db.session.add(example_item)
+            db.session.commit()
+
+        example_picture = Picture.query.filter_by(item_id=example_item.id).first()
+        if example_picture is None:
+            _app.logger.info("Creating test picture")
+            example_picture = Picture(item_id=example_item.id)
+            db.session.add(example_picture)
+            db.session.commit()
+
         _app.logger.info("Created test user, item, picture")
 
 
@@ -58,24 +71,28 @@ app = create_app()
 setup_database(app)
 
 
-def only_logged_in(f):
+def logged_in(f):
     @wraps(f)
-    def _only_logged_in(*args, **kwargs):
+    def _logged_in(*args, **kwargs):
         # just do here everything what you need
 
         if 'username' not in session:
             return redirect(url_for("catch_route"))
 
+        username = session['username']
+        if User.query.filter_by(username=username).first() is None:
+            return redirect(url_for("catch_route"))
+
         result = f(*args, **kwargs)
 
         return result
-    return _only_logged_in
+    return _logged_in
 
 
-def only_logged_out(redirect_to='protected_page'):
-    def _only_logged_out(f):
+def logged_out(redirect_to='protected_page'):
+    def _logged_out(f):
         @wraps(f)
-        def __only_logged_out(*args, **kwargs):
+        def __logged_out(*args, **kwargs):
             # just do here everything what you need
 
             if 'username' in session:
@@ -84,12 +101,12 @@ def only_logged_out(redirect_to='protected_page'):
             result = f(*args, **kwargs)
 
             return result
-        return __only_logged_out
-    return _only_logged_out
+        return __logged_out
+    return _logged_out
 
 
 @app.route('/protected')
-@only_logged_in
+@logged_in
 def protected_page():
     return "This is a protected page. Congrats you logged in" + \
         """<form action="/logout" method="post"> <button type="submit">Log out</button> </form>"""
@@ -143,13 +160,13 @@ def logout():
 
 
 @app.route('/error', methods=['GET'])
-@only_logged_out()
+@logged_out()
 def catch_route():
     return 'Not logged in!'
 
 
 @app.route('/', methods=['GET'])
-@only_logged_out()
+@logged_out()
 def hello_world():
     return 'Hello World!'
 

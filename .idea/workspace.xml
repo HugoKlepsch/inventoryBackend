@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5c07011b-4b8e-4a86-ba46-7d6d397dd0f5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inventoryBackend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inventoryBackend.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/db/db.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/db.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/server/run.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/serverRun.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/serverRun.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,8 +18,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/server/serverRun.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="638">
-                  <caret line="47" column="13" selection-start-line="47" selection-start-column="13" selection-end-line="47" selection-end-column="13" />
+                <state relative-caret-position="290">
+                  <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
                   <folding>
                     <element signature="e#0#27#0" expanded="true" />
                   </folding>
@@ -37,7 +31,7 @@
             <entry file="file://$PROJECT_DIR$/server/db.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="87">
-                  <caret line="3" column="16" selection-start-line="3" selection-start-column="16" selection-end-line="3" selection-end-column="16" />
+                  <caret line="3" column="10" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="10" />
                 </state>
               </provider>
             </entry>
@@ -67,8 +61,11 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/server/models.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="58">
-                  <caret line="2" column="5" selection-start-line="2" selection-start-column="5" selection-end-line="2" selection-end-column="5" />
+                <state relative-caret-position="783">
+                  <caret line="27" column="37" selection-start-line="27" selection-start-column="37" selection-end-line="27" selection-end-column="37" />
+                  <folding>
+                    <element signature="e#0#29#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -167,6 +164,7 @@
     </configuration>
   </component>
   <component name="StructureViewFactory">
+    <option name="AUTOSCROLL_FROM_SOURCE" value="true" />
     <option name="ACTIVE_ACTIONS" value=",SHOW_INHERITED" />
   </component>
   <component name="SvnConfiguration">
@@ -184,18 +182,19 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1916" y="0" width="3848" height="2164" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4972419" visible="true" weight="0.1488" />
-      <window_info id="Structure" order="1" sideWeight="0.5027581" side_tool="true" visible="true" weight="0.1488" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.497684" visible="true" weight="0.1488" />
+      <window_info id="Structure" order="1" sideWeight="0.502316" side_tool="true" visible="true" weight="0.1488" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3299022" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.6147799" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3381369" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="7" visible="true" weight="0.34688625" />
+      <window_info anchor="bottom" id="Version Control" order="7" weight="0.34688625" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32861635" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="10" />
@@ -228,13 +227,6 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/db/Dockerfile">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/venv/lib/python3.7/site-packages/flask_sqlalchemy/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="670" column="8" selection-start-line="670" selection-start-column="8" selection-end-line="670" selection-end-column="8" />
-        </state>
-      </provider>
     </entry>
     <entry file="file:///usr/lib/python3.7/urllib/parse.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -272,17 +264,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/run.sh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="8" column="82" selection-start-line="8" selection-start-column="82" selection-end-line="8" selection-end-column="82" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/db.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="87">
-          <caret line="3" column="16" selection-start-line="3" selection-start-column="16" selection-end-line="3" selection-end-column="16" />
+          <caret line="3" column="10" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/lib/python3.7/site-packages/sqlalchemy/sql/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="469">
+          <caret line="290" column="11" selection-start-line="290" selection-start-column="11" selection-end-line="290" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/lib/python3.7/site-packages/MySQLdb/connections.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="382">
+          <caret line="222" selection-start-line="222" selection-end-line="222" />
         </state>
       </provider>
     </entry>
@@ -293,10 +292,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/venv/lib/python3.7/site-packages/flask_sqlalchemy/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="411">
+          <caret line="956" column="8" selection-start-line="956" selection-start-column="8" selection-end-line="956" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/run.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="232">
+          <caret line="8" column="82" selection-start-line="8" selection-start-column="82" selection-end-line="8" selection-end-column="82" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/server/serverRun.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="638">
-          <caret line="47" column="13" selection-start-line="47" selection-start-column="13" selection-end-line="47" selection-end-column="13" />
+        <state relative-caret-position="290">
+          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
           <folding>
             <element signature="e#0#27#0" expanded="true" />
           </folding>
