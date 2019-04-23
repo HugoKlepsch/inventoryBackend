@@ -2,3 +2,6 @@
 *.o
 *.pyc
 venv/
+*workspace.xml
+*misc.xml
+*inventory*.iml
