@@ -3,7 +3,7 @@ import hashlib
 import logging
 import os
 
-from flask import Flask, session, redirect, url_for, request
+from flask import Flask, session, redirect, url_for, request, render_template
 
 from db import db
 from models import User, Item, Picture
@@ -60,7 +60,7 @@ def setup_database(_app):
         example_picture = Picture.query.filter_by(item_id=example_item.id).first()
         if example_picture is None:
             _app.logger.info("Creating test picture")
-            example_picture = Picture(item_id=example_item.id)
+            example_picture = Picture(item_id=example_item.id, path='http://reddit.com')
             db.session.add(example_picture)
             db.session.commit()
 
@@ -151,6 +151,14 @@ def signup():
     #db.commit()
 
     #return redirect(url_for('catch_route'))
+
+
+@app.route('/all_users', methods=['GET'])
+def all_users():
+    users = User.query.all()
+    for user in users:
+        user.numItems = len(Item.query.filter_by(user_id=user.id).all())
+    return render_template('user.html', users=users)
 
 
 @app.route('/logout', methods=['POST'])

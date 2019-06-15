@@ -38,5 +38,6 @@ class Picture(db.Model):
     id = db.Column(db.Integer, nullable=False, autoincrement=True, primary_key=True)
     create_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     item_id = db.Column(db.Integer, db.ForeignKey(Item.__tablename__ + '.id'), nullable=False)
+    path = db.Column(db.Text, nullable=False)
 
 
