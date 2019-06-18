@@ -3,7 +3,7 @@ import hashlib
 import logging
 import os
 
-from flask import Flask, session, redirect, url_for, request, render_template
+from flask import Flask, session, redirect, url_for, request, render_template, send_from_directory
 
 from db import db
 from models import User, Item, Picture
@@ -76,12 +76,8 @@ def logged_in(f):
     def _logged_in(*args, **kwargs):
         # just do here everything what you need
 
-        if 'username' not in session:
-            return redirect(url_for("catch_route"))
-
-        username = session['username']
-        if User.query.filter_by(username=username).first() is None:
-            return redirect(url_for("catch_route"))
+        if 'username' not in session or User.query.filter_by(username=session['username']).first() is None:
+            return redirect(url_for("not_logged_in"))
 
         result = f(*args, **kwargs)
 
@@ -124,13 +120,6 @@ def login():
     else:
         session['username'] = username
         return 'Logged in'
-#    cursor = db.execute("SELECT A_USERNAME from ACCOUNT_INFO where A_USERNAME=%s AND A_PASSWORD=%s",
-#                        (name, password_hash,))
-#    if not cursor.fetchone():
-#        return "Login details incorrect"
-#    else:
-#        session['username'] = name
-#        return redirect(url_for('user_account'))
 
 
 @app.route('/signup', methods=['POST'])
@@ -140,17 +129,6 @@ def signup():
     email = request.form['email'].encode('utf-8')
 
     return "Signup stub"
-    #cursor = db.execute("SELECT A_USERNAME, A_EMAIL from ACCOUNT_INFO where A_USERNAME=%s OR A_EMAIL=%s",
-    #                    (name, email))
-    #if cursor.fetchone():
-    #    return "Username or email already taken"
-
-    #cursor.execute("""INSERT into ACCOUNT_INFO (A_USERNAME, A_PASSWORD, A_EMAIL) VALUES (%s, %s, %s)""",
-    #               (name, password_hash, email,))
-
-    #db.commit()
-
-    #return redirect(url_for('catch_route'))
 
 
 @app.route('/all_users', methods=['GET'])
@@ -169,14 +147,24 @@ def logout():
 
 @app.route('/error', methods=['GET'])
 @logged_out()
-def catch_route():
+def not_logged_in():
     return 'Not logged in!'
 
 
 @app.route('/', methods=['GET'])
-@logged_out()
+@logged_out(redirect_to='catch_route')
 def hello_world():
-    return 'Hello World!'
+    return render_template('login.html')
+
+
+@app.route('/', defaults={"path": "main.html"})
+@app.route('/<path:path>')
+def catch_route(path):
+
+    if (path.split('.')[-1] == "html"):
+        return render_template(path)
+    else:
+        return send_from_directory("static", path)
 
 
 if __name__ == '__main__':

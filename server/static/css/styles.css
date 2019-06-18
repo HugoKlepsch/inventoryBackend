@@ -1,0 +1,52 @@
+body {
+    background-color: #bbbbbb;
+}
+
+.navbar-site-name {
+    margin: 10px;
+}
+
+.main-section {
+    margin-top: 30%;
+}
+
+.modal-content {
+    background-color: #434e5a;
+    padding: 20px 20px;
+    border-radius: 20px;
+    opacity: .9;
+}
+
+.user-img img {
+    width: 120px;
+    height: auto;
+}
+
+.user-img {
+    margin-top: -60px;
+    margin-bottom: 45px;
+}
+
+.form-input {
+    padding: 10px;
+}
+
+.form-input button {
+    width: 100px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.btn-success:hover {
+    background-color: #13445e;
+}
+
+.signup {
+    margin-top: 5px;
+    margin-bottom: 8px;
+    margin-left: -4px;
+}
+
+a:hover {
+    color: #4da3ff;
+}
