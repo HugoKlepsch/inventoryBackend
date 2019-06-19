@@ -7,10 +7,16 @@ from flask import Flask, session, redirect, url_for, request, render_template, s
 
 from db import db
 from models import User, Item, Picture
+from navbar.navbars import LOGGED_IN_NAVBAR_HEAD, LOGGED_IN_NAVBAR_BODY
+from navbar.navbars import LOGGED_OUT_NAVBAR_HEAD, LOGGED_OUT_NAVBAR_BODY
+
+
+def render_page(template_name, *args, **kwargs):
+    return render_template('pages/' + template_name, *args, **kwargs)
 
 
 def create_app():
-    _app = Flask(__name__, template_folder="templates")
+    _app = Flask(__name__, template_folder='templates')
     _app.secret_key = 'yeetyeetskeetskeet'
     _app.logger.setLevel(logging.DEBUG)
 
@@ -18,7 +24,7 @@ def create_app():
     db_port = int(os.environ.get('DBPORT', 3301))
     db_password = os.environ.get('DBPASS', 'notwaterloo')
     db_database = 'inventorydb'
-    db_string = "mysql://root:{password}@{host}:{port}/{database}".format(
+    db_string = 'mysql://root:{password}@{host}:{port}/{database}'.format(
         password=db_password,
         host=db_host,
         port=db_port,
@@ -34,15 +40,15 @@ def create_app():
 
 def setup_database(_app):
     with _app.app_context():
-        _app.logger.info("Creating databases")
+        _app.logger.info('Creating databases')
         db.drop_all()
         db.create_all()
         db.session.commit()
-        _app.logger.info("Created databases")
+        _app.logger.info('Created databases')
 
         example_user = User.query.filter_by(username='bugmommy').first()
         if example_user is None:
-            _app.logger.info("Creating test user")
+            _app.logger.info('Creating test user')
             example_user = User(username='bugmommy',
                                 name='Tracy',
                                 email='test@email.com',
@@ -52,23 +58,27 @@ def setup_database(_app):
 
         example_item = Item.query.filter_by(user_id=example_user.id).first()
         if example_item is None:
-            _app.logger.info("Creating test item")
+            _app.logger.info('Creating test item')
             example_item = Item(user_id=example_user.id)
             db.session.add(example_item)
             db.session.commit()
 
         example_picture = Picture.query.filter_by(item_id=example_item.id).first()
         if example_picture is None:
-            _app.logger.info("Creating test picture")
+            _app.logger.info('Creating test picture')
             example_picture = Picture(item_id=example_item.id, path='http://reddit.com')
             db.session.add(example_picture)
             db.session.commit()
 
-        _app.logger.info("Created test user, item, picture")
+        _app.logger.info('Created test user, item, picture')
 
 
 app = create_app()
 setup_database(app)
+
+def is_logged_in():
+    return ('username' in session and
+            User.query.filter_by(username=session['username']).first() is not None)
 
 
 def logged_in(f):
@@ -76,8 +86,8 @@ def logged_in(f):
     def _logged_in(*args, **kwargs):
         # just do here everything what you need
 
-        if 'username' not in session or User.query.filter_by(username=session['username']).first() is None:
-            return redirect(url_for("not_logged_in"))
+        if not is_logged_in():
+            return redirect(url_for('not_logged_in'))
 
         result = f(*args, **kwargs)
 
@@ -91,7 +101,7 @@ def logged_out(redirect_to='protected_page'):
         def __logged_out(*args, **kwargs):
             # just do here everything what you need
 
-            if 'username' in session:
+            if is_logged_in():
                 return redirect(url_for(redirect_to))
 
             result = f(*args, **kwargs)
@@ -104,8 +114,8 @@ def logged_out(redirect_to='protected_page'):
 @app.route('/protected')
 @logged_in
 def protected_page():
-    return "This is a protected page. Congrats you logged in" + \
-        """<form action="/logout" method="post"> <button type="submit">Log out</button> </form>"""
+    return 'This is a protected page. Congrats you logged in' + \
+        '''<form action='/logout' method='post'> <button type='submit'>Log out</button> </form>'''
 
 
 @app.route('/login', methods=['POST'])
@@ -113,10 +123,14 @@ def login():
     username = request.form['username'].encode('utf-8')
     password_hash = hashlib.md5(request.form['password'].encode('utf-8')).hexdigest()
 
-    user = User.query.filter_by(username=username, password_hash=password_hash)
+    user = User.query.filter_by(username=username, password_hash=password_hash).first()
 
     if user is None:
-        return "Login details incorrect"
+        return render_page('redirect_with_timeout.html',
+                               title='Inventory',
+                               text='Login details incorrect',
+                               timeout=2000,
+                               redirect_url=url_for('catch_route'))
     else:
         session['username'] = username
         return 'Logged in'
@@ -124,11 +138,28 @@ def login():
 
 @app.route('/signup', methods=['POST'])
 def signup():
-    name = request.form['username'].encode('utf-8')
-    password_hash = hashlib.md5(request.form['password'].encode('utf-8')).hexdigest()
+    name = request.form['name'].encode('utf-8')
+    username = request.form['username'].encode('utf-8')
     email = request.form['email'].encode('utf-8')
+    password_hash = hashlib.md5(request.form['password'].encode('utf-8')).hexdigest()
 
-    return "Signup stub"
+    app.logger.info('Creating user {username}'.format(username=username))
+    try:
+        user = User(name=name, username=username, email=email, password_hash=password_hash)
+        db.session.add(user)
+        db.session.commit()
+        return render_page('redirect_with_timeout.html',
+                               title='Inventory',
+                               text='Added user {username}'.format(username=username),
+                               timeout=2000,
+                               redirect_url=url_for('catch_route'))
+    except Exception as e:
+        app.logger.error('Failed to create user {username}: {e}'.format(username=username, e=e))
+        return render_page('redirect_with_timeout.html',
+                               title='Inventory',
+                               text='Failed to add user. Try again later',
+                               timeout=2000,
+                               redirect_url=url_for('catch_route'))
 
 
 @app.route('/all_users', methods=['GET'])
@@ -136,7 +167,7 @@ def all_users():
     users = User.query.all()
     for user in users:
         user.numItems = len(Item.query.filter_by(user_id=user.id).all())
-    return render_template('user.html', users=users)
+    return render_page('user.html', users=users)
 
 
 @app.route('/logout', methods=['POST'])
@@ -151,20 +182,36 @@ def not_logged_in():
     return 'Not logged in!'
 
 
-@app.route('/', methods=['GET'])
-@logged_out(redirect_to='catch_route')
-def hello_world():
-    return render_template('login.html')
+@app.route('/login.html', methods=['GET'])
+@logged_out()
+def login_page():
+    return render_page('login.html',
+                           head_addons=LOGGED_OUT_NAVBAR_HEAD,
+                           navbar=LOGGED_OUT_NAVBAR_BODY)
 
 
-@app.route('/', defaults={"path": "main.html"})
+@app.route('/main.html', methods=['GET'])
+@logged_out()
+def main_page():
+    return render_page('main.html',
+                           head_addons=LOGGED_IN_NAVBAR_HEAD,
+                           navbar=LOGGED_IN_NAVBAR_BODY)
+
+
+@app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_route(path):
 
-    if (path.split('.')[-1] == "html"):
-        return render_template(path)
+    if path == '':
+        if is_logged_in():
+            redirect(url_for('main_page'))
+        else:
+            redirect(url_for('login_page'))
+
+    if path.split('.')[-1] == 'html':
+        return render_page(path)
     else:
-        return send_from_directory("static", path)
+        return send_from_directory('static', path)
 
 
 if __name__ == '__main__':

@@ -16,8 +16,8 @@ username.onchange = validateUsername;
 var password = document.getElementById("password");
 
 function validatePassword() {
-  if (password.value.length <= 5) {
-    password.setCustomValidity("Must have a passward of length greater then 5");
+  if (password.value.length < 4) {
+    password.setCustomValidity("Must have a password length of at least 4");
     return false;
   } else {
     password.setCustomValidity('');

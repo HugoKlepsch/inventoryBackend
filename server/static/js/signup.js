@@ -17,8 +17,8 @@ var password = document.getElementById("password"),
   confirm_password = document.getElementById("confirm_password");
 
 function validatePassword() {
-  if (password.value.length <= 5) {
-    password.setCustomValidity("Must have a passward of length greater then 5");
+  if (password.value.length < 4) {
+    password.setCustomValidity("Must have a password length of at least 4");
     confirm_password.setCustomValidity('');
     return false;
   } else {
