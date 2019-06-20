@@ -1,68 +1,36 @@
-var username = document.getElementById("username");
-var signup_form = document.getElementById("signup form");
+var signup_form = document.getElementById('signup form');
 
-function validateUsername() {
-  if (username.value.length <= 0) {
-    username.setCustomValidity("Must have a username");
-    return false;
-  } else {
-    username.setCustomValidity("");
-    return username.checkValidity();
-  }
-}
-username.onchange = validateUsername;
+// username field checking
+var username = document.getElementById('username');
 
-//password confirm
-var password = document.getElementById("password"),
-  confirm_password = document.getElementById("confirm_password");
-
-function validatePassword() {
-  if (password.value.length < 4) {
-    password.setCustomValidity("Must have a password length of at least 4");
-    confirm_password.setCustomValidity('');
-    return false;
-  } else {
-    password.setCustomValidity('');
-  }
-
-  // does the password satisfy other requirements?
-
-  if (password.value != confirm_password.value) {
-    confirm_password.setCustomValidity("Passwords Don't Match");
-    return false;
-  } else {
-    confirm_password.setCustomValidity('');
-    return (password.checkValidity() && confirm_password.checkValidity());
-  }
-}
-password.onchange = validatePassword;
-confirm_password.onkeyup = validatePassword;
-
-//email confrim
-var email = document.getElementById("email"),
-  confirm_email = document.getElementById("confirm_email");
-
-function validateEmail() {
-  if (email.value != confirm_email.value) {
-    confirm_email.setCustomValidity("Email Doesn't Match");
-    return false;
-  } else {
-    confirm_email.setCustomValidity('');
-    return (email.checkValidity() && confirm_email.checkValidity());
-  }
+username.onchange = function() {
+    validateUsername(username);
 }
 
-email.onchange = validateEmail;
-confirm_email.onkeyup = validateEmail;
+// password field checking
+var password = document.getElementById('password'),
+var confirm_password = document.getElementById('confirm_password');
+
+password.onchange = function() {
+    validatePassword(password);
+}
+confirm_password.onchange = function() {
+    validateSignupPasswords(password, confirm_password);
+}
+
+// email field checking
+var email = document.getElementById('email'),
+var confirm_email = document.getElementById('confirm_email');
+
+confirm_email.onkeyup = function() {
+    validateSignupEmails(email, confirm_email);
+}
 
 // function called when Sign up button is clicked
 // if signup is valid then post signup form to web api
 function signup() {
-  if (!validateUsername())
-    return;
-  if (!validatePassword())
-    return;
-  if (!validateEmail())
-    return;
-  signup_form.submit();
+    if (!validateUsername(username)) { return; }
+    if (!validateSignupPasswords(password, confirm_password)) { return; }
+    if (!validateSignupEmails(email, confirm_email)) { return; }
+    signup_form.submit();
 }

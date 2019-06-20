@@ -1,41 +1,23 @@
-var username = document.getElementById("username");
-var login_form = document.getElementById("login form");
+var username = document.getElementById('username');
+var login_form = document.getElementById('login form');
 
-function validateUsername() {
-  if (username.value.length <= 0) {
-    username.setCustomValidity("Must have a username");
-    return false;
-  } else {
-    username.setCustomValidity("");
-    return username.checkValidity();
-  }
+// username field checking
+username.onchange = function() {
+    console.log('username.onchange');
+    validateUsername(username);
 }
-username.onchange = validateUsername;
 
-//password confirm
-var password = document.getElementById("password");
+// password field checking
+var password = document.getElementById('password');
 
-function validatePassword() {
-  if (password.value.length < 4) {
-    password.setCustomValidity("Must have a password length of at least 4");
-    return false;
-  } else {
-    password.setCustomValidity('');
-  }
-
-  // does the password satisfy other requirements?
-
-  return password.checkValidity();
+password.onchange = function() {
+    console.log('password.onchange');
+    validatePassword(password);
 }
-password.onchange = validatePassword;
 
 // function called when Sign up button is clicked
 function login() {
-  if (!validateUsername())
-    return;
-  if (!validatePassword())
-    return;
-
-  // log in
-  login_form.submit();
+    if (!validateUsername(username)) { return; }
+    if (!validatePassword(password)) { return; }
+    login_form.submit();
 }

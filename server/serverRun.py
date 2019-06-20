@@ -7,12 +7,6 @@ from flask import Flask, session, redirect, url_for, request, render_template, s
 
 from db import db
 from models import User, Item, Picture
-from navbar.navbars import LOGGED_IN_NAVBAR_HEAD, LOGGED_IN_NAVBAR_BODY
-from navbar.navbars import LOGGED_OUT_NAVBAR_HEAD, LOGGED_OUT_NAVBAR_BODY
-
-
-def render_page(template_name, *args, **kwargs):
-    return render_template('pages/' + template_name, *args, **kwargs)
 
 
 def create_app():
@@ -76,6 +70,11 @@ def setup_database(_app):
 app = create_app()
 setup_database(app)
 
+
+def render_page(template_name, **kwargs):
+    return render_template('pages/' + template_name, **kwargs)
+
+
 def is_logged_in():
     return ('username' in session and
             User.query.filter_by(username=session['username']).first() is not None)
@@ -127,10 +126,10 @@ def login():
 
     if user is None:
         return render_page('redirect_with_timeout.html',
-                               title='Inventory',
-                               text='Login details incorrect',
-                               timeout=2000,
-                               redirect_url=url_for('catch_route'))
+                           title='Inventory',
+                           text='Login details incorrect',
+                           timeout=2000,
+                           redirect_url=url_for('login_page'))
     else:
         session['username'] = username
         return 'Logged in'
@@ -149,17 +148,17 @@ def signup():
         db.session.add(user)
         db.session.commit()
         return render_page('redirect_with_timeout.html',
-                               title='Inventory',
-                               text='Added user {username}'.format(username=username),
-                               timeout=2000,
-                               redirect_url=url_for('catch_route'))
+                           title='Inventory',
+                           text='Added user {username}'.format(username=username),
+                           timeout=2000,
+                           redirect_url=url_for('login_page'))
     except Exception as e:
         app.logger.error('Failed to create user {username}: {e}'.format(username=username, e=e))
         return render_page('redirect_with_timeout.html',
-                               title='Inventory',
-                               text='Failed to add user. Try again later',
-                               timeout=2000,
-                               redirect_url=url_for('catch_route'))
+                           title='Inventory',
+                           text='Failed to add user. Try again later',
+                           timeout=2000,
+                           redirect_url=url_for('login_page'))
 
 
 @app.route('/all_users', methods=['GET'])
@@ -173,7 +172,7 @@ def all_users():
 @app.route('/logout', methods=['POST'])
 def logout():
     session.pop('username', None)
-    return redirect(url_for('catch_route'))
+    return redirect(url_for('login_page'))
 
 
 @app.route('/error', methods=['GET'])
@@ -185,29 +184,25 @@ def not_logged_in():
 @app.route('/login.html', methods=['GET'])
 @logged_out()
 def login_page():
-    return render_page('login.html',
-                           head_addons=LOGGED_OUT_NAVBAR_HEAD,
-                           navbar=LOGGED_OUT_NAVBAR_BODY)
+    return render_page('login.html')
 
 
 @app.route('/main.html', methods=['GET'])
-@logged_out()
+@logged_in
 def main_page():
-    return render_page('main.html',
-                           head_addons=LOGGED_IN_NAVBAR_HEAD,
-                           navbar=LOGGED_IN_NAVBAR_BODY)
+    return render_page('main.html')
 
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
+@app.route('/', methods=['GET'])
+def no_path_handler():
+    if is_logged_in():
+        return redirect(url_for('main_page'))
+    else:
+        return redirect(url_for('login_page'))
+
+
+@app.route('/<path:path>', methods=['GET'])
 def catch_route(path):
-
-    if path == '':
-        if is_logged_in():
-            redirect(url_for('main_page'))
-        else:
-            redirect(url_for('login_page'))
-
     if path.split('.')[-1] == 'html':
         return render_page(path)
     else:
