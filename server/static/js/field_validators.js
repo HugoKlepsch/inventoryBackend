@@ -1,47 +1,28 @@
-function validateUsername(username) {
-    if (username.value.length <= 0) {
-        username.setCustomValidity('Must have a username');
-        username.reportValidity();
-        return false;
-    } else {
-        username.setCustomValidity('');
-        return true;
+function validateAndDisplayHelp(inputs, help_text, additional_validation_functions) {
+    for (const input of inputs) {
+        input.oninput = function() {
+            input.setCustomValidity('');
+            input.checkValidity();
+            if (additional_validation_functions != null && Array.isArray(additional_validation_functions)) {
+                for (const fn of additional_validation_functions) {
+                    var fn_output = fn();
+                    if (fn_output !== '') {
+                        input.setCustomValidity(fn_output);
+                        break;
+                    }
+                }
+            }
+        }
+        input.oninvalid = function() {
+            input.setCustomValidity(help_text);
+        }
     }
 }
 
-function validatePassword(password) {
-    if (password.value.length < 4) {
-        password.setCustomValidity('Must have a password length of at least 4');
-        password.reportValidity();
-        return false;
+function checkValidityInputsSameValue(input_a, input_b, input_name) {
+    if (input_a.value != input_b.value) {
+        return input_name + 's must match';
     } else {
-        password.setCustomValidity('');
-        return true;
-    }
-}
-
-function validateSignupPasswords(password, confirm_password) {
-    if (!validatePassword(password)) { return false; }
-
-    // does the password satisfy other requirements?
-
-    if (password.value != confirm_password.value) {
-        confirm_password.setCustomValidity('Passwords must match');
-        confirm_password.reportValidity();
-        return false;
-    } else {
-        confirm_password.setCustomValidity('');
-        return true;
-    }
-}
-
-function validateSignupEmails(email, confirm_email) {
-    if (email.value != confirm_email.value) {
-        confirm_email.setCustomValidity('Emails must match');
-        confirm_email.reportValidity();
-        return false;
-    } else {
-        confirm_email.setCustomValidity('');
-        return true;
+        return '';
     }
 }

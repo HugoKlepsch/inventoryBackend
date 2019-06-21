@@ -2,35 +2,37 @@ var signup_form = document.getElementById('signup form');
 
 // username field checking
 var username = document.getElementById('username');
+validateAndDisplayHelp([username], 'Username must be between 4 & 30 alphanumeric characters');
 
-username.onchange = function() {
-    validateUsername(username);
-}
-
-// password field checking
-var password = document.getElementById('password'),
-var confirm_password = document.getElementById('confirm_password');
-
-password.onchange = function() {
-    validatePassword(password);
-}
-confirm_password.onchange = function() {
-    validateSignupPasswords(password, confirm_password);
-}
+// name field checking
+var name_input = document.getElementById('name_input');
+validateAndDisplayHelp([name_input], 'Name must be between 1 & 50 alphabetic characters, spaces or hyphens');
 
 // email field checking
-var email = document.getElementById('email'),
+var email = document.getElementById('email');
 var confirm_email = document.getElementById('confirm_email');
+validateAndDisplayHelp([email, confirm_email], 'Must be an email address', [
+    function() {
+        return checkValidityInputsSameValue(email, confirm_email, 'Email');
+    }
+]);
 
-confirm_email.onkeyup = function() {
-    validateSignupEmails(email, confirm_email);
-}
+// password field checking
+var password = document.getElementById('password');
+var confirm_password = document.getElementById('confirm_password');
+validateAndDisplayHelp([password, confirm_password], 'Password must be at least 4 characters', [
+    function() {
+        return checkValidityInputsSameValue(password, confirm_password, 'Password');
+    }
+]);
 
 // function called when Sign up button is clicked
 // if signup is valid then post signup form to web api
 function signup() {
-    if (!validateUsername(username)) { return; }
-    if (!validateSignupPasswords(password, confirm_password)) { return; }
-    if (!validateSignupEmails(email, confirm_email)) { return; }
+    if (!username.checkValidity()) { return; }
+    if (!password.checkValidity()) { return; }
+    if (!confirm_password.checkValidity()) { return; }
+    if (!email.checkValidity()) { return; }
+    if (!confirm_email.checkValidity()) { return; }
     signup_form.submit();
 }

@@ -139,6 +139,13 @@ def login():
 def signup():
     name = request.form['name'].encode('utf-8')
     username = request.form['username'].encode('utf-8')
+    if ' ' in username:
+        app.logger.error('Failed to create user {username}: bad username'.format(username=username, e=e))
+        return render_page('redirect_with_timeout.html',
+                           title='Inventory',
+                           text='Invalid username',
+                           timeout=2000,
+                           redirect_url=url_for('signup_page'))
     email = request.form['email'].encode('utf-8')
     password_hash = hashlib.md5(request.form['password'].encode('utf-8')).hexdigest()
 
@@ -158,7 +165,7 @@ def signup():
                            title='Inventory',
                            text='Failed to add user. Try again later',
                            timeout=2000,
-                           redirect_url=url_for('login_page'))
+                           redirect_url=url_for('signup_page'))
 
 
 @app.route('/all_users', methods=['GET'])
@@ -179,6 +186,12 @@ def logout():
 @logged_out()
 def not_logged_in():
     return 'Not logged in!'
+
+
+@app.route('/signup.html', methods=['GET'])
+@logged_out()
+def signup_page():
+    return render_page('signup.html')
 
 
 @app.route('/login.html', methods=['GET'])

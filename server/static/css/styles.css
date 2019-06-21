@@ -41,10 +41,11 @@ body {
     background-color: #13445e;
 }
 
+.login {
+}
+
 .signup {
-    margin-top: 5px;
-    margin-bottom: 8px;
-    margin-left: -4px;
+    background-color: #bbcee2;
 }
 
 a:hover {
