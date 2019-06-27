@@ -1,6 +1,6 @@
 function validateAndDisplayHelp(inputs, help_text, additional_validation_functions) {
     for (const input of inputs) {
-        input.oninput = function() {
+        input.onchange = function() {
             input.setCustomValidity('');
             input.checkValidity();
             if (additional_validation_functions != null && Array.isArray(additional_validation_functions)) {

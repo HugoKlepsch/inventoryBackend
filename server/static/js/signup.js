@@ -11,7 +11,8 @@ validateAndDisplayHelp([name_input], 'Name must be between 1 & 50 alphabetic cha
 // email field checking
 var email = document.getElementById('email');
 var confirm_email = document.getElementById('confirm_email');
-validateAndDisplayHelp([email, confirm_email], 'Must be an email address', [
+validateAndDisplayHelp([email], 'Must be an email address');
+validateAndDisplayHelp([confirm_email], 'Must be an email address', [
     function() {
         return checkValidityInputsSameValue(email, confirm_email, 'Email');
     }
@@ -20,7 +21,8 @@ validateAndDisplayHelp([email, confirm_email], 'Must be an email address', [
 // password field checking
 var password = document.getElementById('password');
 var confirm_password = document.getElementById('confirm_password');
-validateAndDisplayHelp([password, confirm_password], 'Password must be at least 4 characters', [
+validateAndDisplayHelp([password], 'Password must be at least 4 characters');
+validateAndDisplayHelp([confirm_password], 'Password must be at least 4 characters', [
     function() {
         return checkValidityInputsSameValue(password, confirm_password, 'Password');
     }

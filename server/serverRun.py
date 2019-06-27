@@ -119,7 +119,7 @@ def protected_page():
 
 @app.route('/login', methods=['POST'])
 def login():
-    username = request.form['username'].encode('utf-8')
+    username = request.form['username']
     password_hash = hashlib.md5(request.form['password'].encode('utf-8')).hexdigest()
 
     user = User.query.filter_by(username=username, password_hash=password_hash).first()
@@ -137,8 +137,8 @@ def login():
 
 @app.route('/signup', methods=['POST'])
 def signup():
-    name = request.form['name'].encode('utf-8')
-    username = request.form['username'].encode('utf-8')
+    name = request.form['name']
+    username = request.form['username']
     if ' ' in username:
         app.logger.error('Failed to create user {username}: bad username'.format(username=username, e=e))
         return render_page('redirect_with_timeout.html',
@@ -146,7 +146,7 @@ def signup():
                            text='Invalid username',
                            timeout=2000,
                            redirect_url=url_for('signup_page'))
-    email = request.form['email'].encode('utf-8')
+    email = request.form['email']
     password_hash = hashlib.md5(request.form['password'].encode('utf-8')).hexdigest()
 
     app.logger.info('Creating user {username}'.format(username=username))
@@ -176,7 +176,7 @@ def all_users():
     return render_page('user.html', users=users)
 
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop('username', None)
     return redirect(url_for('login_page'))
