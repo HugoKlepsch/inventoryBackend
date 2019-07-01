@@ -5,3 +5,4 @@ venv/
 *workspace.xml
 *misc.xml
 *inventory*.iml
+Session.vim
