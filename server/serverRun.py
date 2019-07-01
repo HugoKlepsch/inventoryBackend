@@ -35,7 +35,7 @@ def create_app():
 def setup_database(_app):
     with _app.app_context():
         _app.logger.info('Creating databases')
-        db.drop_all()
+        # db.drop_all()
         db.create_all()
         db.session.commit()
         _app.logger.info('Created databases')
@@ -136,7 +136,7 @@ def login():
                            redirect_url=url_for('login_page'))
     else:
         session['username'] = username
-        return 'Logged in'
+        return redirect( url_for( 'main_page' ) )
 
 
 @app.route('/signup', methods=['POST'])
@@ -207,7 +207,9 @@ def login_page():
 @app.route('/main.html', methods=['GET'])
 @logged_in
 def main_page():
-    return render_page('main.html')
+    return render_page('main.html',
+            titleval='Overview'
+            )
 
 
 @app.route('/', methods=['GET'])
