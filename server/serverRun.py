@@ -67,6 +67,10 @@ def setup_database(_app):
         _app.logger.info('Created test user, item, picture')
 
 
+def hash_password(password):
+    return hashlib.md5(password).hexdigest()
+
+
 app = create_app()
 setup_database(app)
 
@@ -108,10 +112,6 @@ def logged_out(redirect_to='protected_page'):
             return result
         return __logged_out
     return _logged_out
-
-
-def hash_password(password):
-    return hashlib.md5(password).hexdigest()
 
 
 @app.route('/protected')
