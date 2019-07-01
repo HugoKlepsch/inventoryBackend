@@ -46,7 +46,7 @@ def setup_database(_app):
             example_user = User(username='bugmommy',
                                 name='Tracy',
                                 email='test@email.com',
-                                password_hash='asdf')
+                                password_hash=hash_password('asdf'.encode('utf-8')))
             db.session.add(example_user)
             db.session.commit()
 
@@ -110,6 +110,10 @@ def logged_out(redirect_to='protected_page'):
     return _logged_out
 
 
+def hash_password(password):
+    return hashlib.md5(password).hexdigest()
+
+
 @app.route('/protected')
 @logged_in
 def protected_page():
@@ -120,7 +124,7 @@ def protected_page():
 @app.route('/login', methods=['POST'])
 def login():
     username = request.form['username']
-    password_hash = hashlib.md5(request.form['password'].encode('utf-8')).hexdigest()
+    password_hash = hash_password(request.form['password'].encode('utf-8'))
 
     user = User.query.filter_by(username=username, password_hash=password_hash).first()
 
@@ -147,7 +151,7 @@ def signup():
                            timeout=2000,
                            redirect_url=url_for('signup_page'))
     email = request.form['email']
-    password_hash = hashlib.md5(request.form['password'].encode('utf-8')).hexdigest()
+    password_hash = hash_password(request.form['password'].encode('utf-8'))
 
     app.logger.info('Creating user {username}'.format(username=username))
     try:

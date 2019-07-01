@@ -8,6 +8,11 @@ resource "aws_ecs_cluster" "inventory" {
   name = "inventoryServer"
 }
 
+resource "aws_ecs_task_definition" "inventory" {
+  family                = "inventoryServerTaskDef"
+  container_definitions = "${file("task-definition.json")}"
+}
+
 resource "aws_ecs_service" "inventoryServerService" {
   name            = "inventoryServerService"
   cluster         = "${aws_ecs_cluster.inventory.id}"
