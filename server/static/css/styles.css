@@ -1,0 +1,96 @@
+/*Main body declaration*/
+body {
+    background-color: #bbbbbb;
+}
+
+/*Selectors {{{*/
+/*}}} Selectors*/
+
+/*Classes {{{*/
+
+.custom{
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.custom:hover{
+  background-color: #aaa;
+}
+
+.block-sales {
+  align-self: stretch;
+  grid-column: col1;
+  grid-row: row1;
+  justify-self: stretch;
+  border: 1px solid red;
+}
+
+.btn-success:hover {
+    background-color: #13445e;
+}
+
+.flex {
+  align-items: flex-start;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: flex-start;
+}
+
+.form-input {
+    padding: 10px;
+}
+
+.form-input button {
+    width: 100px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.grid {
+  alight-content: stretch;
+  align-items: start;
+  border: 1px solid blue;
+  display: grid;
+  grid-template-columns: [col1] 1fr [col2] 1fr;
+  grid-template-rows: [row1] 1fr [row2] 1fr;
+  grid-column-gap: 10px;
+  grid-row-gap: 15px;
+  justify-content: stretch;
+  justify-items: start;
+}
+
+.login {
+}
+
+.navbar-site-name {
+    margin: 10px;
+}
+
+.main-section {
+    margin-top: 30%;
+}
+
+.modal-content {
+    background-color: #434e5a;
+    padding: 20px 20px;
+    border-radius: 20px;
+    opacity: .9;
+}
+
+.signup {
+    /*background-color: #bbcee2;*/
+}
+
+.user-img img {
+    width: 120px;
+    height: auto;
+}
+
+.user-img {
+    margin-top: -60px;
+    margin-bottom: 45px;
+}
+/*Classes }}}*/
