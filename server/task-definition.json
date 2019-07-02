@@ -1,19 +1,16 @@
-{
-  "family": "inventoryServerFamily",
-  "containerDefinitions": [
-    {
-      "name": "inventoryServer",
-      "image": "938957839258.dkr.ecr.us-east-2.amazonaws.com/inventoryserver:latest",
-      "cpu": 128,
-      "memoryReservation": 128,
-      "portMappings": [
-        {
-          "containerPort": 8080,
-          "hostPort": 80,
-          "protocol": "tcp"
-        }
-      ],
-      "essential": true
-    }
-  ]
-}
+[
+  {
+    "name": "inventoryServer",
+    "image": "938957839258.dkr.ecr.us-east-2.amazonaws.com/inventoryserver:latest",
+    "cpu": 128,
+    "memoryReservation": 128,
+    "portMappings": [
+      {
+        "containerPort": 8080,
+        "hostPort": 80,
+        "protocol": "tcp"
+      }
+    ],
+    "essential": true
+  }
+]

@@ -144,7 +144,7 @@ def signup():
     name = request.form['name']
     username = request.form['username']
     if ' ' in username:
-        app.logger.error('Failed to create user {username}: bad username'.format(username=username, e=e))
+        app.logger.error('Failed to create user {username}: bad username'.format(username=username))
         return render_page('redirect_with_timeout.html',
                            title='Inventory',
                            text='Invalid username',
