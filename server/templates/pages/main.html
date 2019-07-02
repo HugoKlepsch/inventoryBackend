@@ -3,8 +3,27 @@
 {% block content %}
 <p>This is the main user page!</p>
 <section class="grid">
-    <div class="block-sales">
-        <p>This is my sales content</p>
+    <div class="block-sales flex">
+        <strong>Sales this Month</strong>
+        <table>
+          <tr>
+            <th>Item</th>
+            <th>Buy Price</th>
+            <th>Sell Price</th>
+          </tr>
+          <tr>
+            <td>Thing1</td>
+            <td>$100</td>
+            <td>$120</td>
+          </tr>
+          {% for sale in sales %}
+          <tr>
+            <td>{{  sale.name }}</td>
+            <td>{{ sale.purchase_price }}</td>
+            <td>{{ sale.sell_price }}</td>
+          </tr>
+          {% endfor %}
+        </table>
     </div>
 </section>
 {% endblock %}
