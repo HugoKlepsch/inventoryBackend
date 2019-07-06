@@ -31,6 +31,8 @@ class Item(db.Model):
 
     pictures = db.relationship('Picture', backref='item', lazy=True)
 
+    name = db.Column(db.Text, nullable=False )
+
 
 class Picture(db.Model):
     __tablename__ = 'pictures'

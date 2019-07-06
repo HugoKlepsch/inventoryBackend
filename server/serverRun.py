@@ -35,7 +35,7 @@ def create_app():
 def setup_database(_app):
     with _app.app_context():
         _app.logger.info('Creating databases')
-        db.drop_all()
+        # db.drop_all() #TODO
         db.create_all()
         db.session.commit()
         _app.logger.info('Created databases')
@@ -53,7 +53,8 @@ def setup_database(_app):
         example_item = Item.query.filter_by(user_id=example_user.id).first()
         if example_item is None:
             _app.logger.info('Creating test item')
-            example_item = Item(user_id=example_user.id)
+            example_item = Item(user_id=example_user.id, name='Test', purchase_price=123,
+                    sell_price=2345)
             db.session.add(example_item)
             db.session.commit()
 
@@ -136,7 +137,7 @@ def login():
                            redirect_url=url_for('login_page'))
     else:
         session['username'] = username
-        return 'Logged in'
+        return redirect( url_for( 'main_page' ) )
 
 
 @app.route('/signup', methods=['POST'])
@@ -207,7 +208,20 @@ def login_page():
 @app.route('/main.html', methods=['GET'])
 @logged_in
 def main_page():
-    return render_page('main.html')
+    monthly_items = db.session.query(Item.name, Item.purchase_price, Item.sell_price).all() or []
+    monthly_items = [
+            {
+                'name': item.name,
+                'purchase_price': "${p:.2f}".format(p=item.purchase_price),
+                'sell_price': "${p:.2f}".format(p=item.sell_price)
+            }
+            for item in monthly_items
+    ]
+
+    return render_page('main.html',
+            titleval='Overview',
+            sales=monthly_items
+            )
 
 
 @app.route('/', methods=['GET'])
