@@ -191,7 +191,7 @@ def all_users():
 
 
 @app.route('/items', methods=['GET'])
-def item():
+def items():
     username = session['username']
     user = User.query.filter_by(username=username).first()
     user_items = Item.query.filter_by(user_id=user.id).all() or []
@@ -205,7 +205,6 @@ def item():
             for item in user_items
         ]
     return json.dumps(user_items)
-            
 
 
 @app.route('/logout', methods=['GET', 'POST'])
