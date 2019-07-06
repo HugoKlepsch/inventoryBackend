@@ -11,7 +11,7 @@ echo "Creating docker network..."
 docker network create inventory
 
 echo "Starting db container..."
-docker run -d -p 3301:3306 --net inventory --name inventorydb inventorydb:latest --default-authentication-plugin=mysql_native_password
+docker run -d -p 5432:5432 --net inventory --name inventorydb inventorydb:latest
 
 echo "Starting server container..."
 docker run --env-file server/env.env -d -p 1221:8080 --net inventory --name inventoryserver inventoryserver:latest

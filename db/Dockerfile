@@ -1,4 +1,4 @@
-FROM mysql:latest
+FROM postgres:10
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
@@ -6,13 +6,13 @@ RUN apt-get update && \
     mkdir inventory && \
     rm -rf /var/lib/apt/lists/*
 
-ENV MYSQL_ROOT_PASSWORD="notwaterloo"
-ENV MYSQL_DATABASE="inventorydb"
+ENV POSTGRES_PASSWORD="notwaterloo"
+ENV POSTGRES_USER="root"
+ENV POSTGRES_DB="inventorydb"
 
 COPY . inventory
 
 WORKDIR inventory
 
-EXPOSE 3306
-
-RUN cp db.sql /docker-entrypoint-initdb.d/
+#EXPOSE 3306
+EXPOSE 5432
