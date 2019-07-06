@@ -1,5 +1,6 @@
 from functools import wraps
 import hashlib
+import json
 import logging
 import os
 
@@ -56,6 +57,14 @@ def setup_database(_app):
             example_item = Item(user_id=example_user.id, name='Test', purchase_price=123,
                     sell_price=2345)
             db.session.add(example_item)
+            example_item_two = Item(user_id=example_user.id, name='Test2', purchase_price=23,
+                    sell_price=5678)
+            db.session.add(example_item)
+            example_item_three = Item(user_id=example_user.id, name='Test3', purchase_price=1235,
+                    sell_price=778)
+            db.session.add(example_item)
+            db.session.add(example_item_two)
+            db.session.add(example_item_three)
             db.session.commit()
 
         example_picture = Picture.query.filter_by(item_id=example_item.id).first()
@@ -179,6 +188,24 @@ def all_users():
     for user in users:
         user.numItems = len(Item.query.filter_by(user_id=user.id).all())
     return render_page('user.html', users=users)
+
+
+@app.route('/items', methods=['GET'])
+def item():
+    username = session['username']
+    user = User.query.filter_by(username=username).first()
+    user_items = Item.query.filter_by(user_id=user.id).all() or []
+
+    user_items = [
+            {
+                'name': item.name,
+                'purchase_price': "${p:.2f}".format(p=item.purchase_price),
+                'sell_price': "${p:.2f}".format(p=item.sell_price)
+            }
+            for item in user_items
+        ]
+    return json.dumps(user_items)
+            
 
 
 @app.route('/logout', methods=['GET', 'POST'])
