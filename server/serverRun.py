@@ -16,10 +16,10 @@ def create_app():
     _app.logger.setLevel(logging.DEBUG)
 
     db_host = os.environ.get('DBHOST', '127.0.0.1')
-    db_port = int(os.environ.get('DBPORT', 3301))
+    db_port = int(os.environ.get('DBPORT', 5432))
     db_password = os.environ.get('DBPASS', 'notwaterloo')
     db_database = 'inventorydb'
-    db_string = 'mysql://root:{password}@{host}:{port}/{database}'.format(
+    db_string = 'postgresql://root:{password}@{host}:{port}/{database}'.format(
         password=db_password,
         host=db_host,
         port=db_port,
