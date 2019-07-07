@@ -1,0 +1,48 @@
+/*
+_flex.scss
+
+This file will is a 'partial' and can be imported into styles.scss
+*/
+
+// The base flexible class. Other classes will extend this one.
+%flexy {
+  align-content: flex-start;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+
+.flex-vert {
+  @extend %flexy;
+  flex-direction: column;
+}
+
+.flex-hori {
+  @extend %flexy;
+  flex-direction: row;
+}
+
+
+.flex-hori {
+}
+
+.flex-page {
+  @extend .flex-vert;
+  align-content: stretch;
+  justify-content: flex-start;
+  width: auto;
+
+}
+
+.flex-nav {
+  @extend .flex-hori;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+section.flex-vert {
+  margin-top: 30%;
+}

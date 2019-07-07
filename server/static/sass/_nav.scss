@@ -1,0 +1,35 @@
+/*
+_nav.scss
+
+This file will is a 'partial' and can be imported into styles.scss
+*/
+
+.gnav {
+  align-items: center;
+  display: grid;
+  grid-template-columns: 5% 10% auto 30%;
+  grid-template-rows: auto;
+  grid-template-areas: "logo title links actions";
+  grid-column-gap: 20px;
+  justify-content: stretch;
+  justify-items: start;
+}
+
+.gnav-logo {
+  grid-area: logo;
+
+}
+
+.gnav-title {
+  grid-area: title;
+}
+
+.gnav-links {
+  grid-area: links;
+}
+
+.gnav-actions {
+  grid-area: actions;
+  justify-self: end;
+}
+
