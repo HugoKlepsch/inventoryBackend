@@ -211,9 +211,11 @@ def items():
 def create_item():
     user_id = session['user_id']
     purchase_date = request.form['purchaseDate']
+    purchase_date = purchase_date if purchase_date != '' else None
     purchase_price = request.form['purchasePrice']
     purchase_price = purchase_price if purchase_price != '' else None
     sell_date = request.form['sellDate']
+    sell_date = sell_date if sell_date != '' else None
     sell_price = request.form['sellPrice']
     sell_price = sell_price if sell_price != '' else None
     description = request.form['description']
