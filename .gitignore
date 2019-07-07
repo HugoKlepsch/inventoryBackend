@@ -6,3 +6,6 @@ venv/
 *misc.xml
 *inventory*.iml
 Session.vim
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
