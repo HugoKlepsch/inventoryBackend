@@ -276,8 +276,10 @@ def main_page():
     monthly_items = [
             {
                 'name': item.name,
-                'purchase_price': "${p:.2f}".format(p=item.purchase_price) if item.purchase_price is not None else "$--",
-                'sell_price': "${p:.2f}".format(p=item.sell_price)  if item.sell_price is not None else "$--"
+                'purchase_price': "${p:.2f}".format(p=item.purchase_price) \
+                        if item.purchase_price is not None else "$--",
+                'sell_price': "${p:.2f}".format(p=item.sell_price) \
+                        if item.sell_price is not None else "$--"
             }
             for item in monthly_items
     ]

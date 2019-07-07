@@ -9,3 +9,4 @@ Session.vim
 .terraform/
 terraform.tfstate
 terraform.tfstate.backup
+server/sass/

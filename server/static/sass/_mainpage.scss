@@ -1,0 +1,27 @@
+/*
+_mainpage.scss
+
+This file will is a 'partial' and can be imported into styles.scss
+*/
+
+.gmainpage {
+  display: grid;
+  grid-template-rows: 10% auto;
+  grid-template-columns: auto;
+  grid-template-areas: "nav" "section";
+  // grid-column-gap: 0px;
+  height: -webkit-fill-available;
+  width: -webkit-fill-available;
+  // align-items: center;
+  // justify-content: stretch;
+  // justify-items: start;
+}
+
+.gmainpage-nav {
+  grid-area: nav;
+}
+
+.gmainpage-section {
+  grid-area: section;
+}
+

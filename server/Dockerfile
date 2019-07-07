@@ -9,9 +9,16 @@ RUN mkdir -p /usr/share/man/man1 && \
     build-essential \
     postgresql-client \
     libpq-dev \
-    iputils-ping && \
+    iputils-ping \
+    curl && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir inventory
+
+RUN mkdir -p inventory/sass && \
+    curl -L https://github.com/sass/dart-sass/releases/download/1.22.3/dart-sass-1.22.3-linux-x64.tar.gz > ./inventory/sass/sass.tar.gz && \
+    cd ./inventory/sass && \
+    tar -xzvf ./sass.tar.gz && \
+    rm ./sass.tar.gz
 
 RUN pip install --no-cache-dir --trusted-host curl requests Flask flask_sqlalchemy psycopg2
 
