@@ -1,4 +1,3 @@
-import datetime
 from functools import wraps
 import hashlib
 import json
@@ -147,7 +146,7 @@ def login():
                            redirect_url=url_for('login_page'))
     else:
         session['username'] = username
-        session['user_id'] =user.id
+        session['user_id'] = user.id
         return redirect( url_for( 'main_page' ) )
 
 
