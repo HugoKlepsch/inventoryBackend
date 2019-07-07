@@ -146,6 +146,7 @@ def login():
                            redirect_url=url_for('login_page'))
     else:
         session['username'] = username
+        session['user_id'] = user.id
         return redirect( url_for( 'main_page' ) )
 
 
@@ -198,13 +199,50 @@ def items():
 
     user_items = [
             {
-                'name': item.name,
-                'purchase_price': "${p:.2f}".format(p=item.purchase_price),
-                'sell_price': "${p:.2f}".format(p=item.sell_price)
+                'id': item.id
             }
             for item in user_items
         ]
     return json.dumps(user_items)
+
+
+@app.route('/item', methods=['POST'])
+def create_item():
+    user_id = session['user_id']
+    purchase_date = request.form['purchaseDate']
+    purchase_date = purchase_date if purchase_date != '' else None
+    purchase_price = request.form['purchasePrice']
+    purchase_price = purchase_price if purchase_price != '' else None
+    sell_date = request.form['sellDate']
+    sell_date = sell_date if sell_date != '' else None
+    sell_price = request.form['sellPrice']
+    sell_price = sell_price if sell_price != '' else None
+    description = request.form['description']
+    name = request.form['name']
+    if ' ' in name:
+        app.logger.error('Failed to create item {name}: bad name'.format(name=name, e=e))
+        return render_page('redirect_with_timeout.html',
+                           title='Inventory',
+                           text='Invalid name',
+                           timeout=2000,
+                           redirect_url=url_for('main_page'))
+    app.logger.info('Creating item {name}'.format(name=name))
+    try:
+        item = Item(user_id=user_id, purchase_date=purchase_date, purchase_price=purchase_price, sell_date=sell_date, sell_price=sell_price, description=description, name=name)#this works but is sending the wrong datetime information
+        db.session.add(item)
+        db.session.commit()
+        return render_page('redirect_with_timeout.html',
+                           title='Inventory',
+                           text='Added item {name}'.format(name=name),
+                           timeout=2000,
+                           redirect_url=url_for('main_page'))#change to item/<id> view instead of items
+    except Exception as e:
+        app.logger.error('Failed to create item {name}: {e}'.format(name=name, e=e))
+        return render_page('redirect_with_timeout.html',
+                           title='Inventory',
+                           text='Failed to add item. Try again later',
+                           timeout=2000,
+                           redirect_url=url_for('main_page'))
 
 
 @app.route('/logout', methods=['GET', 'POST'])
@@ -238,8 +276,8 @@ def main_page():
     monthly_items = [
             {
                 'name': item.name,
-                'purchase_price': "${p:.2f}".format(p=item.purchase_price),
-                'sell_price': "${p:.2f}".format(p=item.sell_price)
+                'purchase_price': "${p:.2f}".format(p=item.purchase_price) if item.purchase_price is not None else "$--",
+                'sell_price': "${p:.2f}".format(p=item.sell_price)  if item.sell_price is not None else "$--"
             }
             for item in monthly_items
     ]
