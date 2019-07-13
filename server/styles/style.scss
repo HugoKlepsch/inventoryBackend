@@ -63,6 +63,17 @@ form { //{{{
   display: flex;
   flex-flow: column wrap;
   justify-content: flex-start;
+  padding: 10px;
+
+  input {
+    margin-bottom: 10px;
+  }
+
+  button {
+      width: 100px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+  }
 } //}}}
 
 section {
@@ -114,19 +125,7 @@ tr:hover {
 }
 
 
-.form-group {
-  margin-bottom: 10px;
-}
 
-.form-input {
-    padding: 10px;
-}
-
-.form-input button {
-    width: 100px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-}
 
 .grid {
   alight-content: stretch;
