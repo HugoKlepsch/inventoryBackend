@@ -7,7 +7,7 @@ import os
 from flask import Flask, session, redirect, url_for, request, render_template, send_from_directory
 
 from db import db
-from models import User, Item, Picture
+from models import User, Item, Picture, Location
 
 
 def create_app():
@@ -59,11 +59,9 @@ def setup_database(_app):
             db.session.add(example_item)
             example_item_two = Item(user_id=example_user.id, name='Test2', purchase_price=23,
                     sell_price=5678)
-            db.session.add(example_item)
+            db.session.add(example_item_two)
             example_item_three = Item(user_id=example_user.id, name='Test3', purchase_price=1235,
                     sell_price=778)
-            db.session.add(example_item)
-            db.session.add(example_item_two)
             db.session.add(example_item_three)
             db.session.commit()
 
@@ -74,7 +72,12 @@ def setup_database(_app):
             db.session.add(example_picture)
             db.session.commit()
 
-        _app.logger.info('Created test user, item, picture')
+        example_location = Location.query.filter_by(name='Freelton Market').first()
+        if example_location is None:
+            _app.logger.info('Creating test location')
+            example_location = Location(name='Freelton Market', user_id=example_user.id)
+
+        _app.logger.info('Created test user, item, picture and location')
 
 
 def hash_password(password):
