@@ -10,7 +10,7 @@ This file will is a 'partial' and can be imported into styles.scss
   grid-template-columns: 5% 10% auto 30%;
   grid-template-rows: auto;
   grid-template-areas: "logo title links actions";
-  grid-column-gap: 20px;
+  grid-column-gap: 0px;
   justify-content: stretch;
   justify-items: start;
 }
