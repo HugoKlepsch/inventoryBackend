@@ -26,6 +26,7 @@ class Item(db.Model):
     purchase_price = db.Column(db.Numeric(precision=19, scale=4, asdecimal=True), nullable=True)
     sell_date = db.Column(db.DateTime, nullable=True)
     sell_price = db.Column(db.Numeric(precision=19, scale=4, asdecimal=True), nullable=True)
+    listed_price = db.Column(db.Numeric(precision=19, scale=4, asdecimal=True), nullable=True)
 
     description = db.Column(db.Text, nullable=True)
 
