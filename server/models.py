@@ -14,6 +14,13 @@ class User(db.Model):
     create_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     items = db.relationship('Item', backref='user', lazy=True)
 
+class Location(db.Model):
+    __tablename__ = 'locations'
+
+    id = db.Column(db.Integer, nullable=False, autoincrement=True, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.__tablename__ + '.id'), nullable=False)
+
 
 class Item(db.Model):
     __tablename__ = 'items'
@@ -21,17 +28,16 @@ class Item(db.Model):
     id = db.Column(db.Integer, nullable=False, autoincrement=True, primary_key=True)
     create_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey(User.__tablename__ + '.id'), nullable=False)
+    location = db.Column(db.Integer, db.ForeignKey(Location.__tablename__ + '.id'), nullable=True)
+    description = db.Column(db.Text, nullable=True)
+    name = db.Column(db.Text, nullable=False )
 
     purchase_date = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
     purchase_price = db.Column(db.Numeric(precision=19, scale=4, asdecimal=True), nullable=True)
     sell_date = db.Column(db.DateTime, nullable=True)
     sell_price = db.Column(db.Numeric(precision=19, scale=4, asdecimal=True), nullable=True)
 
-    description = db.Column(db.Text, nullable=True)
-
     pictures = db.relationship('Picture', backref='item', lazy=True)
-
-    name = db.Column(db.Text, nullable=False )
 
 
 class Picture(db.Model):
@@ -41,5 +47,4 @@ class Picture(db.Model):
     create_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     item_id = db.Column(db.Integer, db.ForeignKey(Item.__tablename__ + '.id'), nullable=False)
     path = db.Column(db.Text, nullable=False)
-
 
