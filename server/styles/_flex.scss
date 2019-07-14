@@ -16,6 +16,7 @@ This file will is a 'partial' and can be imported into styles.scss
 
 .flex-vert {
   @extend %flexy;
+  align-content: center;
   flex-direction: column;
 }
 

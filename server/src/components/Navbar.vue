@@ -19,7 +19,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class Navbar extends Vue {
-  @Prop() private actions!: array;
+  @Prop() private actions!: Array<{title: string, link: string}>;
 }
 </script>
 

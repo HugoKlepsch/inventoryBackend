@@ -295,12 +295,12 @@ def main_page():
 
 @app.route('/', methods=['GET'])
 def no_path_handler():
-    if is_logged_in():
-        return redirect(url_for('main_page'))
-    else:
-        return redirect(url_for('login_page'))
-# Use this to serve the Vue rather than the Flask
-# return send_from_directory('public', 'index.html')
+    # Use this to serve the Vue rather than the Flask
+    return send_from_directory('public', 'index.html')
+    #if is_logged_in():
+    #    return redirect(url_for('main_page'))
+    #else:
+    #    return redirect(url_for('login_page'))
 
 
 @app.route('/<path:path>', methods=['GET'])
