@@ -14,7 +14,7 @@ echo "Starting db container..."
 docker run -d -p 5432:5432 --net inventory --name inventorydb inventorydb:latest
 
 echo "Starting server container..."
-docker run --env-file server/env.env -d -p 1221:8080 --net inventory --name inventoryserver inventoryserver:latest
+docker run --env-file server/env.env -d -p 1221:80 --net inventory --name inventoryserver inventoryserver:latest
 set +x
 
 echo "To see logs of db, type 'docker logs -f inventorydb'"

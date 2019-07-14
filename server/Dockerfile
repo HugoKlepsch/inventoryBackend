@@ -28,6 +28,6 @@ WORKDIR inventory
 
 RUN ./build.sh
 
-EXPOSE 8080
+EXPOSE 80
 
 CMD ["./run.sh"]
