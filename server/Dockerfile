@@ -20,14 +20,18 @@ RUN mkdir -p inventory/sass && \
     tar -xzvf ./sass.tar.gz && \
     rm ./sass.tar.gz
 
+WORKDIR /inventory
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 ENV NVM_DIR="/root/.nvm"
 RUN . "$NVM_DIR/nvm.sh" && nvm install 8.11.4
-RUN pip install --no-cache-dir --trusted-host curl requests Flask flask_sqlalchemy psycopg2
+COPY package.json package-lock.json ./
+RUN . "$NVM_DIR/nvm.sh" && npm install
 
-COPY . inventory
-
-WORKDIR inventory
+COPY . ./
 
 RUN ./build.sh
 
