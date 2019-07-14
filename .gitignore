@@ -10,3 +10,4 @@ Session.vim
 terraform.tfstate
 terraform.tfstate.backup
 server/sass/
+node_modules/
