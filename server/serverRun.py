@@ -36,7 +36,7 @@ def create_app():
 def setup_database(_app):
     with _app.app_context():
         _app.logger.info('Creating databases')
-        # db.drop_all() #TODO
+        db.drop_all() #TODO
         db.create_all()
         db.session.commit()
         _app.logger.info('Created databases')
@@ -310,4 +310,4 @@ def catch_route(path):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    app.run(debug=True, host='0.0.0.0', port=80)
