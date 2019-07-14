@@ -299,6 +299,8 @@ def no_path_handler():
         return redirect(url_for('main_page'))
     else:
         return redirect(url_for('login_page'))
+# Use this to serve the Vue rather than the Flask
+# return send_from_directory('public', 'index.html')
 
 
 @app.route('/<path:path>', methods=['GET'])
@@ -306,7 +308,7 @@ def catch_route(path):
     if path.split('.')[-1] == 'html':
         return render_page(path)
     else:
-        return send_from_directory('static', path)
+        return send_from_directory('public', path)
 
 
 if __name__ == '__main__':
