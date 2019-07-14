@@ -2,7 +2,7 @@
 node_modules
 /dist
 
-css/styles.css*
+public/css/styles.css*
 
 # local env files
 .env.local
