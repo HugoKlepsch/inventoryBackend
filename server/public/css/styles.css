@@ -1,0 +1,213 @@
+/*
+style.scss
+
+This file will be processed into CSS and put in ./server/static/css/style.css
+*/
+/*
+_flex.scss
+
+This file will is a 'partial' and can be imported into styles.scss
+*/
+.flex-hori, .flex-nav, .flex-vert, .flex-page {
+  align-content: flex-start;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.flex-vert, .flex-page {
+  flex-direction: column;
+}
+
+.flex-hori, .flex-nav {
+  flex-direction: row;
+}
+
+.flex-page {
+  align-content: stretch;
+  justify-content: flex-start;
+  width: auto;
+}
+
+.flex-nav {
+  align-items: baseline;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+section.flex-vert, section.flex-page {
+  margin-top: 5em;
+}
+
+/*
+_nav.scss
+
+This file will is a 'partial' and can be imported into styles.scss
+*/
+.gnav {
+  align-items: center;
+  display: grid;
+  grid-template-columns: 5% 10% auto 30%;
+  grid-template-rows: auto;
+  grid-template-areas: "logo title links actions";
+  grid-column-gap: 0px;
+  justify-content: stretch;
+  justify-items: start;
+}
+
+.gnav-logo {
+  grid-area: logo;
+}
+
+.gnav-title {
+  grid-area: title;
+}
+
+.gnav-links {
+  grid-area: links;
+}
+
+.gnav-actions {
+  grid-area: actions;
+  justify-self: end;
+}
+
+a:hover {
+  color: #ee8888;
+}
+
+body {
+  background-color: #bbbbbb;
+  font-family: Tahoma, Geneva, sans-serif;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #121212;
+  text-align: left;
+}
+
+form {
+  align-content: center;
+  align-items: center;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: flex-start;
+  padding: 10px;
+}
+form input {
+  margin-bottom: 10px;
+}
+form button {
+  width: 100px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+section {
+  height: 90%;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  background-color: #fafafa;
+}
+table td, table th {
+  border: 1px solid #121212;
+  padding: 8px;
+}
+table th {
+  background-color: #ee8888;
+  color: #fafafa;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+}
+
+tr:nth-child(even) {
+  background-color: #e0e0e0;
+}
+
+tr:hover {
+  background-color: #c6b0b0;
+}
+
+.block-sales {
+  align-self: stretch;
+  grid-column: col1;
+  grid-row: row1;
+  justify-self: stretch;
+  border: 1px solid red;
+}
+
+.btn-success:hover {
+  background-color: #13445e;
+}
+
+.grid {
+  alight-content: stretch;
+  align-items: start;
+  border: 1px solid blue;
+  display: grid;
+  grid-template-columns: [col1] 1fr [col2] 1fr;
+  grid-template-rows: [row1] 1fr [row2] 1fr;
+  grid-column-gap: 10px;
+  grid-row-gap: 15px;
+  justify-content: stretch;
+  justify-items: start;
+}
+
+.logo {
+  width: 40px;
+  margin: 0px 15px;
+}
+
+.modal-content {
+  background-color: #434e5a;
+  padding: 20px 20px;
+  border-radius: 20px;
+  opacity: 0.9;
+}
+
+.nav {
+  background-color: #343a40;
+  color: #fff;
+  height: 10%;
+  width: 100%;
+}
+.nav li {
+  float: left;
+}
+.nav li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+.nav li a:hover {
+  background-color: #121212;
+}
+.nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.title {
+  display: inline;
+}
+
+.user-img img {
+  width: 120px;
+  height: auto;
+}
+
+.user-img {
+  margin-top: -60px;
+}
+
+/*# sourceMappingURL=styles.css.map */

@@ -1,18 +1,27 @@
 <template>
   <div class="login">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <Navbar v-bind:actions="linkActions" msg="Hello"/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import Navbar from '@/components/Navbar.vue'; // @ is an alias to /src
 
 @Component({
   components: {
-    HelloWorld,
+    Navbar,
   },
+  data: function () {
+    return {
+      linkActions: [
+        {
+          title: "Sign Up",
+          link: "/signup"
+        }
+      ]
+    }
+  }
 })
 export default class Login extends Vue {}
 </script>
