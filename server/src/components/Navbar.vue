@@ -1,10 +1,14 @@
 <template>
-  <div class="hello">
+  <div class="navbar">
     <nav class="gnav nav">
       <img src="/img/logo.png" alt="Logo" class="logo gnav-logo">
       <h2 class="title gnav-title">Inventory</h2>
       <ul class="gnav-actions">
-        <li><a href="/signup">Sign Up</a></li>
+        <template v-for="action in actions">
+          <li>
+            <router-link v-bind:to="action.link">{{ action.title }}</router-link>
+          </li>
+        </template>
       </ul>
     </nav>
   </div>
@@ -14,8 +18,8 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
-export default class HelloWorld extends Vue {
-  @Prop() private msg!: string;
+export default class Navbar extends Vue {
+  @Prop() private actions!: Array<{title: string, link: string}>;
 }
 </script>
 

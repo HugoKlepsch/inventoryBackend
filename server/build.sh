@@ -9,10 +9,7 @@ echo "Compiling Sass into CSS..."
 
 echo "Compiling Vue"
 . "$NVM_DIR/nvm.sh"
-npm run build
-cp ./dist/css/* public/css/
-cp ./dist/img/* public/img/
-cp ./dist/js/* public/js/
-cp ./dist/index.html public/index.html
+npm run build-dev
+cp -r ./dist/* public/
 
 echo "done"

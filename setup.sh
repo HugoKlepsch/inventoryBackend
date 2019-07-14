@@ -14,6 +14,10 @@ nvm install 8.11.4
 
 npm install -g @vue/cli
 
+pushd server/
+npm install
+popd
+
 python3 -m venv venv
 
 . venv/bin/activate
