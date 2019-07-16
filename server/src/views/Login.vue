@@ -6,19 +6,33 @@
         <div class='user-img'>
           <img src='/img/face.png'>
         </div>
-        <div class='form-input flex-vert'>
-          <form id='login form' action='/login' method='post'>
-            <div class='form-group'>
-              <input id='username' type='text' name='username' class='form-control' placeholder='Username'
-                     required pattern='[a-zA-Z0-9_\-]{4,30}' autofocus>
-            </div>
-            <div class='form-group'>
-              <input id='password' type='password' name='password' class='form-control' placeholder='Password'
-                     required pattern='.{4,100}'>
-            </div>
+        <div class='form'>
+          <input
+            autofocus
+            id='username'
+            name='username'
+            pattern='[a-zA-Z0-9_\-]{4,30}'
+            placeholder='Username'
+            required
+            type='text'
+            v-model="loginData.username"
+            />
 
-            <button type='submit' class='btn btn-primary' onclick='login();'>Login</button>
-          </form>
+          <input
+            id='password'
+            name='password'
+            pattern='.{4,100}'
+            placeholder='Password'
+            required
+            type='password'
+            v-model="loginData.password"
+            />
+
+          <button
+            type='submit'
+            v-on:click="attemptLogin"
+            >Login
+          </button>
         </div>
         <!-- TODO implement this
           <div>
@@ -26,7 +40,7 @@
           </div>
         -->
         <div class='center'>
-          <a href='/signup.html'>Sign up</a>
+          <router-link to="/signup">Sign up</router-link>
         </div>
       </div>
     </section>
@@ -49,7 +63,26 @@ import Navbar from '@/components/Navbar.vue'; // @ is an alias to /src
           link: '/signup',
         },
       ],
+      loginData: {
+        username: '',
+        password: '',
+      },
     };
+  },
+  methods: {
+    attemptLogin( event ) {
+      console.log( event );
+      this.$http.post('/login', {
+        username: this.$data.loginData.username,
+        password: this.$data.loginData.password,
+      }).then((res) => {
+        console.log('help me');
+        console.log(res);
+      }, (badRes) => {
+        console.log('HELP ME');
+        console.log(badRes);
+      });
+    },
   },
 })
 export default class Login extends Vue {}

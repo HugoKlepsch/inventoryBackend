@@ -136,8 +136,9 @@ def protected_page():
 
 @app.route('/login', methods=['POST'])
 def login():
-    username = request.form['username']
-    password_hash = hash_password(request.form['password'].encode('utf-8'))
+    data = request.get_json(force=True)
+    username = data['username']
+    password_hash = hash_password(data['password'].encode('utf-8'))
 
     user = User.query.filter_by(username=username, password_hash=password_hash).first()
 

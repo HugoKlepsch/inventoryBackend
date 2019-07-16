@@ -57,24 +57,6 @@ body { //{{{
   text-align: left;
 } //}}}
 
-form { //{{{
-  align-content: center;
-  align-items: center;
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: flex-start;
-  padding: 10px;
-
-  input {
-    margin-bottom: 10px;
-  }
-
-  button {
-      width: 100px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-  }
-} //}}}
 
 section {
   height: 90%;
@@ -96,7 +78,7 @@ table { //{{{
     color: $c-text-light;
     padding-top: 12px;
     padding-bottom: 12px;
-    text-align: left;
+    // text-align: left;
   }
 
 } //}}}
@@ -123,6 +105,22 @@ tr:hover {
 .btn-success:hover {
     background-color: #13445e;
 }
+
+.form { //{{{
+  @extend .flex-vert;
+  justify-content: flex-start;
+  padding: 10px;
+
+  input {
+    margin-bottom: 10px;
+  }
+
+  button {
+      width: 100px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+  }
+} //}}}
 
 
 

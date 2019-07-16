@@ -25,10 +25,6 @@ This file will is a 'partial' and can be imported into styles.scss
   flex-direction: row;
 }
 
-
-.flex-hori {
-}
-
 .flex-page {
   @extend .flex-vert;
   align-content: stretch;
