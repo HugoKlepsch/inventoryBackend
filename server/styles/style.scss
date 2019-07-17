@@ -47,8 +47,12 @@ a:hover {
 }
 
 body { //{{{
+  background: rgb(10,190,178);
+  background: linear-gradient(122deg, rgba(10,190,178,1) 0%, rgba(46,1,37,1) 100%);
   background-color: $c-bg;
+  background-repeat: no-repeat;
   font-family: $font-stack;
+  height: -webkit-fill-available;
   margin: 0;
   font-size: 1rem;
   font-weight: 400;
@@ -152,6 +156,8 @@ tr:hover {
 
 .nav {
   background-color: #343a40;
+  background: rgb(10,190,178);
+  background: linear-gradient(122deg, rgba(10,190,178,1) 0%, rgba(46,1,37,1) 100%);
   color: #fff;
   height: 10%;
   width: 100%;
