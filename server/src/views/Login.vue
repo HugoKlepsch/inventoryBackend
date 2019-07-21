@@ -1,7 +1,7 @@
 <template>
   <div class='login'>
     <Navbar v-bind:actions='linkActions'/>
-    <section class='flex-vert'>
+    <section id='login-section' class='flex-vert'>
       <div class='flex-vert modal-content'>
         <div class='user-img'>
           <img src='/img/face-dark-empty.png'>
@@ -48,8 +48,8 @@
 </template>
 
 <style lang="scss">
-section {
-  height: 70%;
+#login-section {
+  height: 80%;
 }
 
 .login {
