@@ -10,7 +10,7 @@ from db import db
 from models import User, Item, Picture, Location
 
 
-def create_app():
+def create_app(): # {{{
     _app = Flask(__name__, template_folder='templates')
     _app.secret_key = 'yeetyeetskeetskeet'
     _app.logger.setLevel(logging.DEBUG)
@@ -31,9 +31,10 @@ def create_app():
     db.init_app(_app)
 
     return _app
+# }}}
 
 
-def setup_database(_app):
+def setup_database(_app): # {{{
     with _app.app_context():
         _app.logger.info('Creating databases')
         db.drop_all() #TODO
@@ -78,6 +79,7 @@ def setup_database(_app):
             example_location = Location(name='Freelton Market', user_id=example_user.id)
 
         _app.logger.info('Created test user, item, picture and location')
+# }}}
 
 
 def hash_password(password):
@@ -86,10 +88,6 @@ def hash_password(password):
 
 app = create_app()
 setup_database(app)
-
-
-def render_page(template_name, **kwargs):
-    return render_template('pages/' + template_name, **kwargs)
 
 
 def is_logged_in():
@@ -127,13 +125,6 @@ def logged_out(redirect_to='protected_page'):
     return _logged_out
 
 
-@app.route('/protected')
-@logged_in
-def protected_page():
-    return 'This is a protected page. Congrats you logged in' + \
-        '''<form action='/logout' method='post'> <button type='submit'>Log out</button> </form>'''
-
-
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json(force=True)
@@ -143,15 +134,17 @@ def login():
     user = User.query.filter_by(username=username, password_hash=password_hash).first()
 
     if user is None:
-        return render_page('redirect_with_timeout.html',
-                           title='Inventory',
-                           text='Login details incorrect',
-                           timeout=2000,
-                           redirect_url=url_for('login_page'))
+        return json.dumps({
+            'code': 401,
+            'msg': 'Unauthorized. Login details incorrect'
+            })
     else:
         session['username'] = username
         session['user_id'] = user.id
-        return redirect( url_for( 'main_page' ) )
+        return json.dumps({
+            'code': 200,
+            'msg': 'Login accepted.'
+            })
 
 
 @app.route('/signup', methods=['POST'])
@@ -261,55 +254,36 @@ def not_logged_in():
     return 'Not logged in!'
 
 
-@app.route('/signup.html', methods=['GET'])
-@logged_out()
-def signup_page():
-    return render_page('signup.html')
+# @app.route('/main.html', methods=['GET'])
+# @logged_in
+# def main_page():
+#     monthly_items = db.session.query(Item.name, Item.purchase_price, Item.sell_price).all() or []
+#     monthly_items = [
+#             {
+#                 'name': item.name,
+#                 'purchase_price': "${p:.2f}".format(p=item.purchase_price) \
+#                         if item.purchase_price is not None else "$--",
+#                 'sell_price': "${p:.2f}".format(p=item.sell_price) \
+#                         if item.sell_price is not None else "$--"
+#             }
+#             for item in monthly_items
+#     ]
 
-
-@app.route('/login.html', methods=['GET'])
-@logged_out()
-def login_page():
-    return render_page('login.html')
-
-
-@app.route('/main.html', methods=['GET'])
-@logged_in
-def main_page():
-    monthly_items = db.session.query(Item.name, Item.purchase_price, Item.sell_price).all() or []
-    monthly_items = [
-            {
-                'name': item.name,
-                'purchase_price': "${p:.2f}".format(p=item.purchase_price) \
-                        if item.purchase_price is not None else "$--",
-                'sell_price': "${p:.2f}".format(p=item.sell_price) \
-                        if item.sell_price is not None else "$--"
-            }
-            for item in monthly_items
-    ]
-
-    return render_page('main.html',
-            titleval='Overview',
-            sales=monthly_items
-            )
+#     return render_page('main.html',
+#             titleval='Overview',
+#             sales=monthly_items
+#             )
 
 
 @app.route('/', methods=['GET'])
 def no_path_handler():
     # Use this to serve the Vue rather than the Flask
     return send_from_directory('public', 'index.html')
-    #if is_logged_in():
-    #    return redirect(url_for('main_page'))
-    #else:
-    #    return redirect(url_for('login_page'))
 
 
 @app.route('/<path:path>', methods=['GET'])
 def catch_route(path):
-    if path.split('.')[-1] == 'html':
-        return render_page(path)
-    else:
-        return send_from_directory('public', path)
+    return send_from_directory('public', path)
 
 
 if __name__ == '__main__':

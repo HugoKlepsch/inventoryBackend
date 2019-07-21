@@ -76,8 +76,9 @@ import Navbar from '@/components/Navbar.vue'; // @ is an alias to /src
         username: this.$data.loginData.username,
         password: this.$data.loginData.password,
       }).then((res) => {
-        console.log('help me');
+        console.log('GOOD RETURN FROM API');
         console.log(res);
+        this.$router.push('home');
       }, (badRes) => {
         console.log('HELP ME');
         console.log(badRes);
