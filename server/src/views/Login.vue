@@ -15,7 +15,7 @@
             placeholder='Username'
             required
             type='text'
-            v-model="loginData.username"
+            v-model="username"
             />
 
           <input
@@ -25,7 +25,7 @@
             placeholder='Password'
             required
             type='password'
-            v-model="loginData.password"
+            v-model="password"
             />
 
           <button
@@ -47,6 +47,59 @@
   </div>
 </template>
 
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import Navbar from '@/components/Navbar.vue'; // @ is an alias to /src
+
+@Component({
+  components: {
+    Navbar,
+  },
+  computed: {
+    password: {
+      get() {
+        return this.$store.state.login.password;
+      },
+      set( value ) {
+        this.$store.commit( 'setLoginPassword', value );
+      },
+    },
+    username: {
+      get() {
+        return this.$store.state.login.username;
+      },
+      set( value ) {
+        this.$store.commit( 'setLoginUsername', value );
+      },
+    },
+  },
+  data: () => {
+    return {
+      linkActions: [
+        {
+          title: 'Sign Up',
+          link: '/signup',
+        },
+      ],
+    };
+  },
+  methods: {
+    attemptLogin( event ) {
+      console.log( event );
+      this.$store.dispatch( 'postLogin' )
+        .then( () => {
+          this.$router.push('home');
+        }).catch( () => {
+          console.log( 'UNAUTORIZED, see the response below...');
+          console.log( this.$store.state.login.response );
+        });
+    },
+  },
+})
+export default class Login extends Vue {}
+</script>
+
 <style lang="scss">
 #login-section {
   height: 80%;
@@ -57,46 +110,3 @@
 }
 </style>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import Navbar from '@/components/Navbar.vue'; // @ is an alias to /src
-
-@Component({
-  components: {
-    Navbar,
-  },
-  data: () => {
-    return {
-      linkActions: [
-        {
-          title: 'Sign Up',
-          link: '/signup',
-        },
-      ],
-      loginData: {
-        username: '',
-        password: '',
-      },
-      loginError: false,
-    };
-  },
-  methods: {
-    attemptLogin( event ) {
-      console.log( event );
-      this.$http.post('/login', {
-        username: this.$data.loginData.username,
-        password: this.$data.loginData.password,
-      }).then((res) => {
-        console.log('GOOD RETURN FROM API');
-        console.log(res);
-        this.$router.push('home');
-      }, (badRes) => {
-        console.log('HELP ME');
-        console.log(badRes);
-        this.$data.loginError = true;
-      });
-    },
-  },
-})
-export default class Login extends Vue {}
-</script>

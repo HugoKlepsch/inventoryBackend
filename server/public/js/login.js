@@ -11,7 +11,7 @@ validateAndDisplayHelp([password], 'Password must be at least 4 characters');
 
 // function called when Sign up button is clicked
 function login() {
-    if (!username.checkValidity()) { return; }
-    if (!password.checkValidity()) { return; }
-    login_form.submit();
+  if (!username.checkValidity()) { return; }
+  if (!password.checkValidity()) { return; }
+  login_form.submit();
 }
