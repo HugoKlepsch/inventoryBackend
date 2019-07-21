@@ -7,7 +7,7 @@ This file will is a 'partial' and can be imported into styles.scss
 .gnav {
   align-items: center;
   display: grid;
-  grid-template-columns: 5% 10% auto 30%;
+  grid-template-columns: 70px 10% auto 30%;
   grid-template-rows: auto;
   grid-template-areas: "logo title links actions";
   grid-column-gap: 0px;
@@ -17,7 +17,8 @@ This file will is a 'partial' and can be imported into styles.scss
 
 .gnav-logo {
   grid-area: logo;
-
+  width: 40px;
+  margin: 15px 15px;
 }
 
 .gnav-title {

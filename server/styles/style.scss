@@ -46,13 +46,20 @@ a:hover {
   color: $c-link-hov;
 }
 
+html {
+  height: 100%;
+}
+
 body { //{{{
-  background: rgb(10,190,178);
-  background: linear-gradient(122deg, rgba(10,190,178,1) 0%, rgba(46,1,37,1) 100%);
+  background: rgb(37,25,68);
+  background: linear-gradient(0deg, rgba(37,25,68,1) 85%, rgba(51,11,109,1) 100%);
   background-color: $c-bg;
   background-repeat: no-repeat;
   font-family: $font-stack;
-  height: -webkit-fill-available;
+  height: 100%;
+  //height: -moz-available;
+  //height: -webkit-fill-available;
+  //height: fill-available;
   margin: 0;
   font-size: 1rem;
   font-weight: 400;
@@ -139,25 +146,20 @@ tr:hover {
   grid-column-gap: 10px;
   grid-row-gap: 15px;
   justify-content: stretch;
-  justify-items: start;
-}
-
-.logo {
-  width: 40px;
-  margin: 0px 15px;
+  //justify-items: start;
 }
 
 .modal-content {
-    background-color: #434e5a;
-    padding: 20px 20px;
-    border-radius: 20px;
-    opacity: .9;
+  background: rgb(36,0,51);
+  background: radial-gradient(circle, rgba(36,0,51,1) 0%, rgba(37,25,68,1) 48%);
+  padding: 20px 20px;
+  border-radius: 20px;
+  opacity: .9;
 }
 
 .nav {
-  background-color: #343a40;
-  background: rgb(10,190,178);
-  background: linear-gradient(122deg, rgba(10,190,178,1) 0%, rgba(46,1,37,1) 100%);
+  background: rgb(41,15,83);
+  background: linear-gradient(90deg, rgba(41,15,83,1) 0%, rgba(56,9,121,1) 75%, rgba(51,0,42,1) 100%);
   color: #fff;
   height: 10%;
   width: 100%;

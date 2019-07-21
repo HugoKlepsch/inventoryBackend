@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
     <nav class="gnav nav">
-      <img src="/img/logo.png" alt="Logo" class="logo gnav-logo">
+      <img src="/img/logo-light.png" alt="Logo" class="gnav-logo">
       <h2 class="title gnav-title">Inventory</h2>
       <ul class="gnav-actions">
         <template v-for="action in actions">
