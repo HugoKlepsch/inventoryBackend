@@ -16,7 +16,7 @@ $cs-10   : #ee8888;
 $cs-13   : #ff7777;
 
 $cs-dark    : #121212;
-$cs-light   : #fafafa;
+$cs-light   : #ffffff;
 $cs-light-g : #e0e0e0;
 $cs-red     : red;
 
@@ -30,6 +30,17 @@ $c-tb-border : $cs-dark;
 $c-tb-header : $cs-10;
 $c-tb-bg     : $cs-light;
 $c-tb-nth    : $cs-light-g;
+
+// Darkscheme
+$c-base-dark          : rgb(37, 25, 68);
+$c-purple-accent-dark : rgb(36, 0, 51);
+
+// Navbar
+$c-navbar-left   : rgb(41, 15, 83);
+$c-navbar-middle : rgb(56, 9, 121);
+$c-navbar-right  : rgb(51, 0, 42);
+
+$c-body-top : $c-navbar-middle;
 
 $font-stack: Tahoma, Geneva, sans-serif;
 
@@ -46,9 +57,16 @@ a:hover {
   color: $c-link-hov;
 }
 
+html {
+  height: 100%;
+}
+
 body { //{{{
-  background-color: $c-bg;
+  background: $c-base-dark;
+  background: linear-gradient(0deg, $c-base-dark 85%, $c-body-top 100%);
+  background-repeat: no-repeat;
   font-family: $font-stack;
+  height: inherit;
   margin: 0;
   font-size: 1rem;
   font-weight: 400;
@@ -135,24 +153,21 @@ tr:hover {
   grid-column-gap: 10px;
   grid-row-gap: 15px;
   justify-content: stretch;
-  justify-items: start;
-}
-
-.logo {
-  width: 40px;
-  margin: 0px 15px;
+  //justify-items: start;
 }
 
 .modal-content {
-    background-color: #434e5a;
-    padding: 20px 20px;
-    border-radius: 20px;
-    opacity: .9;
+  background: $c-purple-accent-dark;
+  background: radial-gradient(circle, $c-purple-accent-dark 0%, $c-base-dark 48%);
+  padding: 20px 20px;
+  border-radius: 20px;
+  opacity: .9;
 }
 
 .nav {
-  background-color: #343a40;
-  color: #fff;
+  background: $c-navbar-left;
+  background: linear-gradient(90deg, $c-navbar-left 0%, $c-navbar-middle 75%, $c-navbar-right 100%);
+  color: $c-text-light;
   height: 10%;
   width: 100%;
 

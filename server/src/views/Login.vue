@@ -1,10 +1,10 @@
 <template>
   <div class='login'>
-    <Navbar v-bind:actions='linkActions' msg='Hello'/>
-    <section class='flex-vert'>
+    <Navbar v-bind:actions='linkActions'/>
+    <section id='login-section' class='flex-vert'>
       <div class='flex-vert modal-content'>
         <div class='user-img'>
-          <img src='/img/face.png'>
+          <img src='/img/face-dark-empty.png'>
         </div>
         <div class='form'>
           <input
@@ -46,6 +46,16 @@
     </section>
   </div>
 </template>
+
+<style lang="scss">
+#login-section {
+  height: 80%;
+}
+
+.login {
+  height: inherit;
+}
+</style>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
