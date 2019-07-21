@@ -3,6 +3,7 @@ node_modules
 /dist
 
 public/css/styles.css*
+public/app.js
 
 # local env files
 .env.local

@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "./sass/dart-sass/sass ./styles/style.scss ./public/css/styles.css && vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "build-dev": "vue-cli-service build --mode development",
+    "serve": "npm run sass && vue-cli-service serve",
+    "build": "npm run sass && vue-cli-service build && cp -r dist/* public/",
+    "build-dev": "npm run sass && vue-cli-service build --mode development && cp -r dist/* public/",
     "lint": "vue-cli-service lint",
+    "sass": "./sass/dart-sass/sass ./styles/style.scss ./public/css/styles.css",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {

@@ -6,7 +6,7 @@
         <div class='user-img'>
           <img src='/img/face-dark-empty.png'>
         </div>
-        <div class='form'>
+        <div v-bind:class='{invalidForm: loginError}' class='form'>
           <input
             autofocus
             id='username'
@@ -77,6 +77,7 @@ import Navbar from '@/components/Navbar.vue'; // @ is an alias to /src
         username: '',
         password: '',
       },
+      loginError: false,
     };
   },
   methods: {
@@ -92,6 +93,7 @@ import Navbar from '@/components/Navbar.vue'; // @ is an alias to /src
       }, (badRes) => {
         console.log('HELP ME');
         console.log(badRes);
+        this.$data.loginError = true;
       });
     },
   },
