@@ -1,16 +1,21 @@
+import argparse
 from functools import wraps
 import hashlib
 import json
 import logging
 import os
+import re
 
-from flask import Flask, session, redirect, url_for, request, render_template, send_from_directory
+from flask import Flask, session, redirect, url_for, request, send_from_directory
 
 from db import db
 from models import User, Item, Picture, Location
 
 
-def create_app(): # {{{
+JSON_CT = {'Content-Type': 'application/json; charset=utf-8'}
+
+
+def create_app():  # {{{
     _app = Flask(__name__, template_folder='templates')
     _app.secret_key = 'yeetyeetskeetskeet'
     _app.logger.setLevel(logging.DEBUG)
@@ -34,10 +39,10 @@ def create_app(): # {{{
 # }}}
 
 
-def setup_database(_app): # {{{
+def setup_database(_app):  # {{{
     with _app.app_context():
         _app.logger.info('Creating databases')
-        db.drop_all() #TODO
+        db.drop_all()  # TODO
         db.create_all()
         db.session.commit()
         _app.logger.info('Created databases')
@@ -46,7 +51,6 @@ def setup_database(_app): # {{{
         if example_user is None:
             _app.logger.info('Creating test user')
             example_user = User(username='bugmommy',
-                                name='Tracy',
                                 email='test@email.com',
                                 password_hash=hash_password('asdf'.encode('utf-8')))
             db.session.add(example_user)
@@ -56,13 +60,13 @@ def setup_database(_app): # {{{
         if example_item is None:
             _app.logger.info('Creating test item')
             example_item = Item(user_id=example_user.id, name='Test', purchase_price=123,
-                    sell_price=2345)
+                                sell_price=2345)
             db.session.add(example_item)
             example_item_two = Item(user_id=example_user.id, name='Test2', purchase_price=23,
-                    sell_price=5678)
+                                    sell_price=5678)
             db.session.add(example_item_two)
             example_item_three = Item(user_id=example_user.id, name='Test3', purchase_price=1235,
-                    sell_price=778)
+                                      sell_price=778)
             db.session.add(example_item_three)
             db.session.commit()
 
@@ -77,6 +81,8 @@ def setup_database(_app): # {{{
         if example_location is None:
             _app.logger.info('Creating test location')
             example_location = Location(name='Freelton Market', user_id=example_user.id)
+            db.session.add(example_location)
+            db.session.commit()
 
         _app.logger.info('Created test user, item, picture and location')
 # }}}
@@ -90,22 +96,26 @@ app = create_app()
 setup_database(app)
 
 
-def is_logged_in():
-    return ('username' in session and
-            User.query.filter_by(username=session['username']).first() is not None)
+def is_logged_in(as_user=None):
+    if 'username' in session:
+        username = session['username']
+        return (User.query.filter_by(username=username).first() is not None) and \
+               (as_user is None or username == as_user)
 
 
-def logged_in(f):
-    @wraps(f)
-    def _logged_in(*args, **kwargs):
-        # just do here everything what you need
+def logged_in(as_user=None):
+    def _logged_in(f):
+        @wraps(f)
+        def __logged_in(*args, **kwargs):
+            # just do here everything what you need
 
-        if not is_logged_in():
-            return redirect(url_for('not_logged_in'))
+            if not is_logged_in(as_user=as_user):
+                return redirect(url_for('not_logged_in'))
 
-        result = f(*args, **kwargs)
+            result = f(*args, **kwargs)
 
-        return result
+            return result
+        return __logged_in
     return _logged_in
 
 
@@ -135,60 +145,67 @@ def login():
 
     if user is None:
         return json.dumps({
-            'code': 401,
             'msg': 'Unauthorized. Login details incorrect'
-            })
+        }), 401, JSON_CT
     else:
         session['username'] = username
         session['user_id'] = user.id
         return json.dumps({
-            'code': 200,
-            'msg': 'Login accepted.'
-            })
+            'msg': 'Login accepted'
+        }), 200, JSON_CT
 
 
 @app.route('/signup', methods=['POST'])
 def signup():
-    name = request.form['name']
-    username = request.form['username']
-    if ' ' in username:
-        app.logger.error('Failed to create user {username}: bad username'.format(username=username, e=e))
-        return render_page('redirect_with_timeout.html',
-                           title='Inventory',
-                           text='Invalid username',
-                           timeout=2000,
-                           redirect_url=url_for('signup_page'))
-    email = request.form['email']
-    password_hash = hash_password(request.form['password'].encode('utf-8'))
+    data = request.get_json(force=True)
 
-    app.logger.info('Creating user {username}'.format(username=username))
-    try:
-        user = User(name=name, username=username, email=email, password_hash=password_hash)
-        db.session.add(user)
-        db.session.commit()
-        return render_page('redirect_with_timeout.html',
-                           title='Inventory',
-                           text='Added user {username}'.format(username=username),
-                           timeout=2000,
-                           redirect_url=url_for('login_page'))
-    except Exception as e:
-        app.logger.error('Failed to create user {username}: {e}'.format(username=username, e=e))
-        return render_page('redirect_with_timeout.html',
-                           title='Inventory',
-                           text='Failed to add user. Try again later',
-                           timeout=2000,
-                           redirect_url=url_for('signup_page'))
+    username = data.get('username', None)
+    email = data.get('email', None)
+    password = data.get('password', None)
+
+    if username is not None and \
+            email is not None and \
+            password is not None:
+        password_hash = hash_password(password.encode('utf-8'))
+
+        if re.match(r'[a-zA-Z0-9_\-]{4,30}', username) is not None:
+            app.logger.info('Creating user {username}'.format(username=username))
+            try:
+                user = User(username=username, email=email, password_hash=password_hash)
+                db.session.add(user)
+                db.session.commit()
+                return json.dumps({
+                    'msg': 'User created'
+                }), 200, JSON_CT
+            except Exception:
+                return json.dumps({
+                    'msg': 'Could not create user'
+                }), 400, JSON_CT
+
+    return json.dumps({
+        'msg': 'Missing parameters'
+    }), 400, JSON_CT
 
 
 @app.route('/all_users', methods=['GET'])
+@logged_in(as_user='bugmommy')  # TODO create admin account
 def all_users():
-    users = User.query.all()
-    for user in users:
-        user.numItems = len(Item.query.filter_by(user_id=user.id).all())
-    return render_page('user.html', users=users)
+    users = [
+        {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'password_hash': user.password_hash,
+            'create_date': str(user.create_date),
+            'num_items': len(Item.query.filter_by(user_id=user.id).all())
+        }
+        for user in User.query.all()
+    ]
+    return json.dumps(users, indent=2), 200, JSON_CT
 
 
 @app.route('/items', methods=['GET'])
+@logged_in()
 def items():
     username = session['username']
     user = User.query.filter_by(username=username).first()
@@ -199,11 +216,12 @@ def items():
                 'id': item.id
             }
             for item in user_items
-        ]
-    return json.dumps(user_items)
+    ]
+    return json.dumps(user_items), 200, JSON_CT
 
 
 @app.route('/item', methods=['POST'])
+@logged_in()
 def create_item():
     user_id = session['user_id']
     purchase_date = request.form['purchaseDate']
@@ -245,13 +263,17 @@ def create_item():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop('username', None)
-    return redirect(url_for('login_page'))
+    return json.dumps({
+        'msg': 'Ok'
+    }), 200, JSON_CT
 
 
 @app.route('/error', methods=['GET'])
 @logged_out()
 def not_logged_in():
-    return 'Not logged in!'
+    return json.dumps({
+        'msg': 'Not logged in'
+    }), 401, JSON_CT
 
 
 # @app.route('/main.html', methods=['GET'])
@@ -276,7 +298,7 @@ def not_logged_in():
 
 
 @app.route('/', methods=['GET'])
-def no_path_handler():
+def login_page():
     # Use this to serve the Vue rather than the Flask
     return send_from_directory('public', 'index.html')
 
@@ -287,4 +309,8 @@ def catch_route(path):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=80)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--port', type=int, default=80)
+    args = parser.parse_args()
+
+    app.run(debug=True, host='0.0.0.0', port=args.port)

@@ -140,8 +140,12 @@ tr:hover {
   }
 } //}}}
 
-
-
+.invalidForm {
+  border-style: solid;
+  border-color: red;
+  border-radius: 20px;
+  border-width: 1px;
+}
 
 .grid {
   align-content: stretch;
