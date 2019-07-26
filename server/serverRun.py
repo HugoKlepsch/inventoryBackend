@@ -263,7 +263,9 @@ def create_item():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop('username', None)
-    return redirect(url_for('login_page')), 200
+    return json.dumps({
+        'msg': 'Ok'
+    }), 200, JSON_CT
 
 
 @app.route('/error', methods=['GET'])
