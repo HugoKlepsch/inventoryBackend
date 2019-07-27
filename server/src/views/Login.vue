@@ -1,4 +1,4 @@
-<template>
+<template> <!-- {{{ -->
   <div class='login'>
     <Navbar v-bind:actions='linkActions'/>
     <section id='login-section' class='flex-vert'>
@@ -6,7 +6,19 @@
         <div class='user-img'>
           <img src='/img/face-dark-empty.png'>
         </div>
-        <div v-bind:class='{invalidForm: loginError}' class='form'>
+        <div v-if='isReqsRevealed' id='reqs'>
+          <ul>
+            <li><em>Username must be between 4 & 30 alphanumeric characters</em></li>
+            <li><em>Password must be at least 4 characters</em></li>
+          </ul>
+        </div>
+        <!-- <div class='form'> -->
+        <form
+          action=""
+          v-on:submit="attemptLogin"
+          class='form'
+          v-bind:class='{invalidForm: loginError}'
+          >
           <input
             autofocus
             id='username'
@@ -15,7 +27,8 @@
             placeholder='Username'
             required
             type='text'
-            v-model="username"
+            v-model="login.username"
+            v-on:input.once='revealRequirements'
             />
 
           <input
@@ -25,7 +38,7 @@
             placeholder='Password'
             required
             type='password'
-            v-model="password"
+            v-model="login.password"
             />
 
           <button
@@ -33,7 +46,8 @@
             v-on:click="attemptLogin"
             >Login
           </button>
-        </div>
+        </form>
+        <!-- </div> -->
         <!-- TODO implement this
           <div>
           <a href='/forgotpassword.html'>Forgot Password?</a>
@@ -45,64 +59,89 @@
       </div>
     </section>
   </div>
-</template>
+  <!-- }}} --></template>
 
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+// import Vue from 'vue';
+// import Component from 'vue-class-component';
+import { Vue, Component } from 'vue-property-decorator';
 import Navbar from '@/components/Navbar.vue'; // @ is an alias to /src
+import { LinkAction } from '@/interfaces/LinkAction';
 
 @Component({
-  components: {
+  components: { // {{{
     Navbar,
-  },
-  computed: {
-    password: {
-      get() {
-        return this.$store.state.login.password;
-      },
-      set( value ) {
-        this.$store.commit( 'setLoginPassword', value );
-      },
-    },
-    username: {
-      get() {
-        return this.$store.state.login.username;
-      },
-      set( value ) {
-        this.$store.commit( 'setLoginUsername', value );
-      },
-    },
-  },
-  data: () => {
-    return {
-      linkActions: [
-        {
-          title: 'Sign Up',
-          link: '/signup',
-        },
-      ],
-    };
-  },
-  methods: {
-    attemptLogin( event ) {
-      console.log( event );
-      this.$store.dispatch( 'postLogin' )
-        .then( () => {
-          this.$router.push('home');
-        }).catch( () => {
-          console.log( 'UNAUTORIZED, see the response below...');
-          console.log( this.$store.state.login.response );
-        });
-    },
-  },
+  }, // }}}
 })
-export default class Login extends Vue {}
+
+export default class Login extends Vue {
+  // data {{{
+  private linkActions: LinkAction[] = [
+    {
+      title: 'Sign Up',
+      link: '/signup',
+    },
+  ];
+
+  private login: { username: string, password: string } = {
+    username: '',
+    password: '',
+  };
+
+  private isReqsRevealed: boolean = false;
+  // data }}}
+
+  // methods {{{
+  public attemptLogin( event: Event ) {
+    this.$store.commit( 'setLoginPassword', this.$data.login.password );
+    this.$store.commit( 'setLoginUsername', this.$data.login.username );
+    this.$store.dispatch( 'postLogin' )
+      .then( () => {
+        this.$router.push('home');
+      }).catch( () => {
+        console.log( 'UNAUTORIZED, see the response below...');
+        console.log( this.$store.state.login.response );
+      });
+    event.preventDefault();
+  }
+
+  private revealRequirements( event: Event ) {
+    this.$data.isReqsRevealed = true;
+  }
+  // methods }}}
+
+}
+
+//  computed: { // {{{
+//    password: {
+//      get() {
+//        return this.$store.state.login.password;
+//      },
+//      set( value ) {
+//        this.$store.commit( 'setLoginPassword', value );
+//      },
+//    },
+//    username: {
+//      get() {
+//        return this.$store.state.login.username;
+//      },
+//      set( value ) {
+//        this.$store.commit( 'setLoginUsername', value );
+//      },
+//    },
+//  }, // }}}
+
+// export default class Login extends Vue {}
 </script>
 
 <style lang="scss">
 #login-section {
   height: 80%;
+}
+
+#reqs {
+  text-align: left;
 }
 
 .login {
