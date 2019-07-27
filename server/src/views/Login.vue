@@ -112,27 +112,6 @@ export default class Login extends Vue {
   // methods }}}
 
 }
-
-//  computed: { // {{{
-//    password: {
-//      get() {
-//        return this.$store.state.login.password;
-//      },
-//      set( value ) {
-//        this.$store.commit( 'setLoginPassword', value );
-//      },
-//    },
-//    username: {
-//      get() {
-//        return this.$store.state.login.username;
-//      },
-//      set( value ) {
-//        this.$store.commit( 'setLoginUsername', value );
-//      },
-//    },
-//  }, // }}}
-
-// export default class Login extends Vue {}
 </script>
 
 <style lang="scss">
