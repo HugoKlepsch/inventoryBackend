@@ -227,7 +227,7 @@ def delete_item(item_id):
         return BAD_REQUEST_JSON_RESPONSE
 
 
-@app.route('/item/<_id>', methods=['GET'])
+@app.route('/item/<int:_id>', methods=['GET'])
 @logged_in()
 def get_item(_id):
     # grab item from the list by id.
