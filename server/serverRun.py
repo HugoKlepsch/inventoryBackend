@@ -220,6 +220,25 @@ def items():
     return json.dumps(user_items), 200, JSON_CT
 
 
+@app.route('/item/<int:item_id>',methods=['DELETE'])
+def delete_item(item_id):
+    user_id = session['user_id']
+    try:
+        picRow = Picture.query.filter_by(id=item_id).one()
+        row = Item.query.filter_by(id=item_id, user_id=user_id).one()
+        db.session.delete(picRow)
+        db.session.delete(row)
+        db.session.commit()
+        return json.dumps({
+            'msg': 'Ok, this has been deleted'
+        }), 200, JSON_CT
+    except Exception as e:
+        app.logger.error('Failed to delete item {name}: {e}'.format(name=item_id, e=e))
+        return json.dumps({
+            'msg': 'bad'
+        }), 500, JSON_CT
+      
+
 @app.route('/item', methods=['POST'])
 @logged_in()
 def create_item():
