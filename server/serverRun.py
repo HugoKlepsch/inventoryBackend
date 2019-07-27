@@ -212,20 +212,19 @@ def items():
 
 
 @app.route('/item/<int:item_id>',methods=['DELETE'])
+@logged_in()
+@marshal_with(JsonApiSchema())
 def delete_item(item_id):
     user_id = session['user_id']
     try:
         row = Item.query.filter_by(id=item_id, user_id=user_id).one()
         db.session.delete(row)
         db.session.commit()
-        return json.dumps({
-            'msg': 'Ok, this has been deleted'
-        }), 200, JSON_CT
+        return ok_response('Ok, this has been deleted')
+
     except Exception as e:
         app.logger.error('Failed to delete item {name}: {e}'.format(name=item_id, e=e))
-        return json.dumps({
-            'msg': 'bad'
-        }), 500, JSON_CT
+        return BAD_REQUEST_JSON_RESPONSE
 
 
 # TODO add validation to this route
