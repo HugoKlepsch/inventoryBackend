@@ -224,9 +224,7 @@ def items():
 def delete_item(item_id):
     user_id = session['user_id']
     try:
-        picRow = Picture.query.filter_by(id=item_id).one()
         row = Item.query.filter_by(id=item_id, user_id=user_id).one()
-        db.session.delete(picRow)
         db.session.delete(row)
         db.session.commit()
         return json.dumps({

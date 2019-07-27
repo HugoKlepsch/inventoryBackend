@@ -37,7 +37,7 @@ class Item(db.Model):
     sell_price = db.Column(db.Numeric(precision=19, scale=4, asdecimal=True), nullable=True)
     listed_price = db.Column(db.Numeric(precision=19, scale=4, asdecimal=True), nullable=True)
 
-    pictures = db.relationship('Picture', backref='item', lazy=True)
+    children = db.relationship("Picture", cascade="all,delete", backref="item")
 
 
 class Picture(db.Model):
