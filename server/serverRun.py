@@ -227,6 +227,21 @@ def delete_item(item_id):
         return BAD_REQUEST_JSON_RESPONSE
 
 
+@app.route('/item/<_id>', methods=['GET'])
+@logged_in()
+def get_item(_id):
+    # grab item from the list by id.
+    item = Item.query.get(_id) or []
+
+    # TODO to be converted to a serializing call.
+    item_json = [
+            {
+                'id': item.id,
+            }
+    ]
+    return json.dumps(item_json), 200, JSON_CT
+
+
 # TODO add validation to this route
 @app.route('/item', methods=['POST'])
 @logged_in()
