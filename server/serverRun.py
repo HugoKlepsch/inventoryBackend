@@ -7,12 +7,15 @@ import os
 import re
 
 from flask import Flask, session, redirect, url_for, request, send_from_directory
+from flask_apispec import marshal_with
+from marshmallow import fields
+from webargs.flaskparser import use_args
 
 from db import db
 from models import User, Item, Picture, Location
-
-
-JSON_CT = {'Content-Type': 'application/json; charset=utf-8'}
+from models import UserSchema, ItemSchema
+from schema import JSON_CT, INTERNAL_SERVER_ERROR_JSON_RESPONSE, BAD_REQUEST_JSON_RESPONSE, ok_response
+from schema import JsonApiSchema
 
 
 def create_app():  # {{{
@@ -119,14 +122,19 @@ def logged_in(as_user=None):
     return _logged_in
 
 
-def logged_out(redirect_to='protected_page'):
+def logged_out(redirect_to):
     def _logged_out(f):
         @wraps(f)
         def __logged_out(*args, **kwargs):
             # just do here everything what you need
 
             if is_logged_in():
-                return redirect(url_for(redirect_to))
+                if redirect_to is not None:
+                    return redirect(url_for(redirect_to))
+                else:
+                    return json.dumps({
+                        'msg': 'Should not be logged in'
+                    }), 400, JSON_CT
 
             result = f(*args, **kwargs)
 
@@ -136,28 +144,33 @@ def logged_out(redirect_to='protected_page'):
 
 
 @app.route('/login', methods=['POST'])
-def login():
-    data = request.get_json(force=True)
+@use_args({
+    'username': fields.Str(required=True),
+    'password': fields.Str(required=True)
+})
+@marshal_with(JsonApiSchema())
+def login(data):
     username = data['username']
     password_hash = hash_password(data['password'].encode('utf-8'))
 
     user = User.query.filter_by(username=username, password_hash=password_hash).first()
 
     if user is None:
-        return json.dumps({
-            'msg': 'Unauthorized. Login details incorrect'
-        }), 401, JSON_CT
+        return BAD_REQUEST_JSON_RESPONSE
     else:
         session['username'] = username
         session['user_id'] = user.id
-        return json.dumps({
-            'msg': 'Login accepted'
-        }), 200, JSON_CT
+        return ok_response('Logged in')
 
 
 @app.route('/signup', methods=['POST'])
-def signup():
-    data = request.get_json(force=True)
+@use_args({
+    'username': fields.Str(required=True),
+    'email': fields.Str(required=True),
+    'password': fields.Str(required=True)
+})
+@marshal_with(JsonApiSchema())
+def signup(data):
 
     username = data.get('username', None)
     email = data.get('email', None)
@@ -174,69 +187,47 @@ def signup():
                 user = User(username=username, email=email, password_hash=password_hash)
                 db.session.add(user)
                 db.session.commit()
-                return json.dumps({
-                    'msg': 'User created'
-                }), 200, JSON_CT
+                return ok_response('User created')
             except Exception:
-                return json.dumps({
-                    'msg': 'Could not create user'
-                }), 400, JSON_CT
+                return INTERNAL_SERVER_ERROR_JSON_RESPONSE
 
-    return json.dumps({
-        'msg': 'Missing parameters'
-    }), 400, JSON_CT
+    return BAD_REQUEST_JSON_RESPONSE
 
 
 @app.route('/all_users', methods=['GET'])
 @logged_in(as_user='bugmommy')  # TODO create admin account
+@marshal_with(UserSchema(many=True))
 def all_users():
-    users = [
-        {
-            'id': user.id,
-            'username': user.username,
-            'email': user.email,
-            'password_hash': user.password_hash,
-            'create_date': str(user.create_date),
-            'num_items': len(Item.query.filter_by(user_id=user.id).all())
-        }
-        for user in User.query.all()
-    ]
-    return json.dumps(users, indent=2), 200, JSON_CT
+    return User.query.all()
 
 
 @app.route('/items', methods=['GET'])
 @logged_in()
+@marshal_with(ItemSchema(many=True))
 def items():
     username = session['username']
     user = User.query.filter_by(username=username).first()
     user_items = Item.query.filter_by(user_id=user.id).all() or []
-
-    user_items = [
-            {
-                'id': item.id
-            }
-            for item in user_items
-    ]
-    return json.dumps(user_items), 200, JSON_CT
+    return user_items
 
 
 @app.route('/item/<int:item_id>',methods=['DELETE'])
+@logged_in()
+@marshal_with(JsonApiSchema())
 def delete_item(item_id):
     user_id = session['user_id']
     try:
         row = Item.query.filter_by(id=item_id, user_id=user_id).one()
         db.session.delete(row)
         db.session.commit()
-        return json.dumps({
-            'msg': 'Ok, this has been deleted'
-        }), 200, JSON_CT
+        return ok_response('Ok, this has been deleted')
+
     except Exception as e:
         app.logger.error('Failed to delete item {name}: {e}'.format(name=item_id, e=e))
-        return json.dumps({
-            'msg': 'bad'
-        }), 500, JSON_CT
-      
+        return BAD_REQUEST_JSON_RESPONSE
 
+
+# TODO add validation to this route
 @app.route('/item', methods=['POST'])
 @logged_in()
 def create_item():
@@ -278,19 +269,19 @@ def create_item():
 
 
 @app.route('/logout', methods=['GET', 'POST'])
+@marshal_with(JsonApiSchema())
 def logout():
     session.pop('username', None)
-    return json.dumps({
-        'msg': 'Ok'
-    }), 200, JSON_CT
+    return ok_response('Logged out')
 
 
 @app.route('/error', methods=['GET'])
-@logged_out()
+@logged_out(redirect_to=None)
+@marshal_with(JsonApiSchema())
 def not_logged_in():
-    return json.dumps({
+    return {
         'msg': 'Not logged in'
-    }), 401, JSON_CT
+    }, 401, JSON_CT
 
 
 # @app.route('/main.html', methods=['GET'])
