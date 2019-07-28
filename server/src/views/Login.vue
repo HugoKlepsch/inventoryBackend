@@ -68,6 +68,7 @@
 import { Vue, Component } from 'vue-property-decorator';
 import Navbar from '@/components/Navbar.vue'; // @ is an alias to /src
 import { LinkAction } from '@/interfaces/LinkAction';
+import axios from 'axios';
 
 @Component({
   components: { // {{{
@@ -108,20 +109,6 @@ export default class Login extends Vue {
       });
     event.preventDefault();
   }
-
-
-  private beforeRouteEnter(to, from, next) {
-    axios.get('/logout')
-    .then((res) => {
-      console.log("Hit res");
-      next();
-  })
-    .catch((badRes) => {
-      console.log("Hit badRes");
-      next(false);
-    });
-  }
-
 
   private revealRequirements( event: Event ) {
     this.$data.isReqsRevealed = true;

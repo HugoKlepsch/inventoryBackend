@@ -6,7 +6,10 @@
       <ul class="gnav-actions">
         <template v-for="action in actions">
           <li>
-            <router-link v-bind:to="action.link">{{ action.title }}</router-link>
+            <router-link
+              v-bind:to="action.link"
+              v-on:click="navOperation(action.link)"
+            >{{ action.title }}</router-link>
           </li>
         </template>
       </ul>
@@ -16,11 +19,29 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import axios from 'axios';
 
-@Component
+@Component({
+  methods: {
+    navOperation(link) {
+      console.log(link);
+      if (link === '/logout') {
+        console.log("Axios?");
+        axios.get('/logout')
+        .then((res) => {
+          console.log("Hit res");
+        })
+        .catch((badRes) => {
+          console.log("Hit badRes");
+        });
+      }
+    },
+  },
+})
 export default class Navbar extends Vue {
   @Prop() private actions!: Array<{title: string, link: string}>;
 }
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
