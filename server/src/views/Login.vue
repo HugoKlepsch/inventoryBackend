@@ -90,18 +90,21 @@ export default class Login extends Vue {
   };
 
   private isReqsRevealed: boolean = false;
+  private loginError: boolean = false;
   // data }}}
 
   // methods {{{
-  public attemptLogin( event: Event ) {
+  private attemptLogin( event: Event ) {
     this.$store.commit( 'setLoginPassword', this.$data.login.password );
     this.$store.commit( 'setLoginUsername', this.$data.login.username );
     this.$store.dispatch( 'postLogin' )
       .then( () => {
+        this.$data.loginError = false;
         this.$router.push('home');
       }).catch( () => {
         console.log( 'UNAUTORIZED, see the response below...');
         console.log( this.$store.state.login.response );
+        this.$data.loginError = true;
       });
     event.preventDefault();
   }

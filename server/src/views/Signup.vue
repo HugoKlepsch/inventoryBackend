@@ -66,6 +66,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import axios from 'axios';
 import Navbar from '@/components/Navbar.vue'; // @ is an alias to /src
 
 @Component({
@@ -91,18 +92,20 @@ import Navbar from '@/components/Navbar.vue'; // @ is an alias to /src
   methods: {
     attemptSignup( event ) {
       console.log( event );
-      this.$http.post('/signup', {
+      axios.post('/signup', {
         username: this.$data.signupData.username,
         email: this.$data.signupData.email,
         password: this.$data.signupData.password,
-      }).then((res) => {
-        console.log('GOOD RETURN FROM API');
-        console.log(res);
-        this.$router.push('home');
-      }, (badRes) => {
-        console.log('HELP ME');
-        console.log(badRes);
-      });
+      })
+        .then((res) => {
+          console.log('GOOD RETURN FROM API');
+          console.log(res);
+          this.$router.push('home');
+        })
+        .catch( (badRes) => {
+          console.log('HELP ME');
+          console.log(badRes);
+        });
     },
   },
 })
