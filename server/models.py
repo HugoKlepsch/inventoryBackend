@@ -30,11 +30,11 @@ class Item(db.Model):
     id = db.Column(db.Integer, nullable=False, autoincrement=True, primary_key=True)
     create_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey(User.__tablename__ + '.id'), nullable=False)
-    location = db.Column(db.Integer, db.ForeignKey(Location.__tablename__ + '.id'), nullable=True)
+    location_id = db.Column(db.Integer, db.ForeignKey(Location.__tablename__ + '.id'), nullable=True)
     description = db.Column(db.Text, nullable=True)
     name = db.Column(db.Text, nullable=False )
 
-    purchase_date = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
+    purchase_date = db.Column(db.DateTime, nullable=True)
     purchase_price = db.Column(db.Numeric(precision=19, scale=4, asdecimal=True), nullable=True)
     sell_date = db.Column(db.DateTime, nullable=True)
     sell_price = db.Column(db.Numeric(precision=19, scale=4, asdecimal=True), nullable=True)
@@ -53,8 +53,6 @@ class Picture(db.Model):
 
 
 class PictureSchema(JsonApiSchema):
-    _object_class = Picture
-
     id = fields.Integer()
     create_date = fields.DateTime()
     item_id = fields.Integer()
@@ -62,20 +60,16 @@ class PictureSchema(JsonApiSchema):
 
 
 class LocationSchema(JsonApiSchema):
-    _object_class = Location
-
     id = fields.Integer()
     name = fields.String()
     user_id = fields.Integer()
 
 
 class ItemSchema(JsonApiSchema):
-    _object_class = Item
-
     id = fields.Integer()
     create_date = fields.DateTime()
     user_id = fields.Integer()
-    location = fields.Nested(LocationSchema)
+    location_id = fields.Integer()
     description = fields.String()
     name = fields.String()
     purchase_date = fields.DateTime()
@@ -87,8 +81,6 @@ class ItemSchema(JsonApiSchema):
 
 
 class UserSchema(JsonApiSchema):
-    _object_class = User
-
     id = fields.Integer()
     username = fields.String()
     email = fields.String()
