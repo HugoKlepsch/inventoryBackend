@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Login from './views/Login.vue';
 import Signup from './views/Signup.vue';
 import Home from './views/Home.vue';
+import axios from 'axios';
 
 Vue.use(Router);
 

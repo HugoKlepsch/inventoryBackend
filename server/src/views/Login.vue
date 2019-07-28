@@ -109,6 +109,20 @@ export default class Login extends Vue {
     event.preventDefault();
   }
 
+
+  private beforeRouteEnter(to, from, next) {
+    axios.get('/logout')
+    .then((res) => {
+      console.log("Hit res");
+      next();
+  })
+    .catch((badRes) => {
+      console.log("Hit badRes");
+      next(false);
+    });
+  }
+
+
   private revealRequirements( event: Event ) {
     this.$data.isReqsRevealed = true;
   }
@@ -130,4 +144,7 @@ export default class Login extends Vue {
   height: inherit;
 }
 </style>
+<<<<<<< a7e63008f072539e976073f03dad1cd984dc956d
 
+=======
+>>>>>>> Working on vue logout
