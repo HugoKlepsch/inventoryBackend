@@ -143,7 +143,7 @@ def logged_out(redirect_to):
     return _logged_out
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 @use_args({
     'username': fields.Str(required=True),
     'password': fields.Str(required=True)
@@ -163,7 +163,7 @@ def login(data):
         return ok_response('Logged in')
 
 
-@app.route('/signup', methods=['POST'])
+@app.route('/api/signup', methods=['POST'])
 @use_args({
     'username': fields.Str(required=True),
     'email': fields.Str(required=True),
@@ -194,14 +194,14 @@ def signup(data):
     return BAD_REQUEST_JSON_RESPONSE
 
 
-@app.route('/all_users', methods=['GET'])
+@app.route('/api/all_users', methods=['GET'])
 @logged_in(as_user='bugmommy')  # TODO create admin account
 @marshal_with(UserSchema(many=True, exclude=['password_hash', 'items']))
 def all_users():
     return User.query.all()
 
 
-@app.route('/items', methods=['GET'])
+@app.route('/api/items', methods=['GET'])
 @logged_in()
 @marshal_with(ItemSchema(many=True))
 def items():
@@ -211,7 +211,7 @@ def items():
     return user_items
 
 
-@app.route('/item/<int:item_id>',methods=['DELETE'])
+@app.route('/api/item/<int:item_id>',methods=['DELETE'])
 @logged_in()
 @marshal_with(JsonApiSchema())
 def delete_item(item_id):
@@ -227,7 +227,7 @@ def delete_item(item_id):
         return BAD_REQUEST_JSON_RESPONSE
 
 
-@app.route('/item/<int:_id>', methods=['GET'])
+@app.route('/api/item/<int:_id>', methods=['GET'])
 @logged_in()
 @marshal_with(ItemSchema())
 def get_item(_id):
@@ -241,7 +241,7 @@ def get_item(_id):
 
 
 # TODO add validation to this route
-@app.route('/item', methods=['POST'])
+@app.route('/api/item', methods=['POST'])
 @logged_in()
 def create_item():
     user_id = session['user_id']
@@ -281,14 +281,14 @@ def create_item():
                            redirect_url=url_for('main_page'))
 
 
-@app.route('/logout', methods=['GET', 'POST'])
+@app.route('/api/logout', methods=['GET', 'POST'])
 @marshal_with(JsonApiSchema())
 def logout():
     session.pop('username', None)
     return ok_response('Logged out')
 
 
-@app.route('/error', methods=['GET'])
+@app.route('/api/error', methods=['GET'])
 @logged_out(redirect_to=None)
 @marshal_with(JsonApiSchema())
 def not_logged_in():
