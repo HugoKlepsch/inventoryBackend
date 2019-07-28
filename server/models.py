@@ -2,7 +2,7 @@ from datetime import datetime
 from marshmallow import fields
 
 from db import db
-from schema import ObjectSchema
+from schema import DictSchema
 
 
 class User(db.Model):
@@ -52,7 +52,7 @@ class Picture(db.Model):
     path = db.Column(db.Text, nullable=False)
 
 
-class PictureSchema(ObjectSchema):
+class PictureSchema(DictSchema):
     _object_class = Picture
 
     id = fields.Integer()
@@ -61,7 +61,7 @@ class PictureSchema(ObjectSchema):
     path = fields.String()
 
 
-class LocationSchema(ObjectSchema):
+class LocationSchema(DictSchema):
     _object_class = Location
 
     id = fields.Integer()
@@ -69,7 +69,7 @@ class LocationSchema(ObjectSchema):
     user_id = fields.Integer()
 
 
-class ItemSchema(ObjectSchema):
+class ItemSchema(DictSchema):
     _object_class = Item
 
     id = fields.Integer()
@@ -86,7 +86,7 @@ class ItemSchema(ObjectSchema):
     pictures = fields.List(fields.Nested(PictureSchema))
 
 
-class UserSchema(ObjectSchema):
+class UserSchema(DictSchema):
     _object_class = User
 
     id = fields.Integer()
