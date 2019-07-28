@@ -31,7 +31,7 @@ export default new Vuex.Store({
   actions: { // {{{
     postLogin( context ) {
       return new Promise( ( resolve, reject ) => {
-        axios.post( '/login', {
+        axios.post( '/api/login', {
           username: context.state.login.username,
           password: context.state.login.password,
         })

@@ -92,7 +92,7 @@ import Navbar from '@/components/Navbar.vue'; // @ is an alias to /src
   methods: {
     attemptSignup( event ) {
       console.log( event );
-      axios.post('/signup', {
+      axios.post('/api/signup', {
         username: this.$data.signupData.username,
         email: this.$data.signupData.email,
         password: this.$data.signupData.password,
