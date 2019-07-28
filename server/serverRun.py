@@ -240,45 +240,40 @@ def get_item(_id):
         return BAD_REQUEST_JSON_RESPONSE
 
 
-# TODO add validation to this route
 @app.route('/api/item', methods=['POST'])
 @logged_in()
-def create_item():
+@use_args(ItemSchema(exclude=['id', 'create_date', 'user_id']))
+@marshal_with(JsonApiSchema())
+def create_item(data):
+
     user_id = session['user_id']
-    purchase_date = request.form['purchaseDate']
-    purchase_date = purchase_date if purchase_date != '' else None
-    purchase_price = request.form['purchasePrice']
-    purchase_price = purchase_price if purchase_price != '' else None
-    sell_date = request.form['sellDate']
-    sell_date = sell_date if sell_date != '' else None
-    sell_price = request.form['sellPrice']
-    sell_price = sell_price if sell_price != '' else None
-    description = request.form['description']
-    name = request.form['name']
-    if ' ' in name:
-        app.logger.error('Failed to create item {name}: bad name'.format(name=name, e=e))
-        return render_page('redirect_with_timeout.html',
-                           title='Inventory',
-                           text='Invalid name',
-                           timeout=2000,
-                           redirect_url=url_for('main_page'))
+    location_id = data.get('location_id', None)
+    description = data.get('description', None)
+    name = data.get('name', None)
+    purchase_date = data.get('purchase_date', None)
+    purchase_price = data.get('purchase_price', None)
+    sell_date = data.get('sell_date', None)
+    sell_price = data.get('sell_price', None)
+    listed_price = data.get('listed_price', None)
+
     app.logger.info('Creating item {name}'.format(name=name))
     try:
-        item = Item(user_id=user_id, purchase_date=purchase_date, purchase_price=purchase_price, sell_date=sell_date, sell_price=sell_price, description=description, name=name)#this works but is sending the wrong datetime information
+        item = Item(user_id=user_id,
+                    location_id=location_id,
+                    description=description,
+                    name=name,
+                    purchase_date=purchase_date,
+                    purchase_price=purchase_price,
+                    sell_date=sell_date,
+                    sell_price=sell_price,
+                    listed_price=listed_price
+                    )
         db.session.add(item)
         db.session.commit()
-        return render_page('redirect_with_timeout.html',
-                           title='Inventory',
-                           text='Added item {name}'.format(name=name),
-                           timeout=2000,
-                           redirect_url=url_for('main_page'))#change to item/<id> view instead of items
+        return ok_response('Created item')
     except Exception as e:
         app.logger.error('Failed to create item {name}: {e}'.format(name=name, e=e))
-        return render_page('redirect_with_timeout.html',
-                           title='Inventory',
-                           text='Failed to add item. Try again later',
-                           timeout=2000,
-                           redirect_url=url_for('main_page'))
+        return BAD_REQUEST_JSON_RESPONSE
 
 
 @app.route('/api/logout', methods=['GET', 'POST'])
