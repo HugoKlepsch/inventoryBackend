@@ -272,7 +272,10 @@ def create_item():
 @marshal_with(JsonApiSchema())
 def logout():
     session.pop('username', None)
-    return ok_response('Logged out')
+    session.pop('user_id', None)
+    return json.dumps({
+        'msg': 'Ok'
+    }), 200, JSON_CT
 
 
 @app.route('/error', methods=['GET'])
