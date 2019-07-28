@@ -196,7 +196,7 @@ def signup(data):
 
 @app.route('/all_users', methods=['GET'])
 @logged_in(as_user='bugmommy')  # TODO create admin account
-@marshal_with(UserSchema(many=True))
+@marshal_with(UserSchema(many=True, exclude=['password_hash', 'items']))
 def all_users():
     return User.query.all()
 
@@ -224,6 +224,19 @@ def delete_item(item_id):
 
     except Exception as e:
         app.logger.error('Failed to delete item {name}: {e}'.format(name=item_id, e=e))
+        return BAD_REQUEST_JSON_RESPONSE
+
+
+@app.route('/item/<int:_id>', methods=['GET'])
+@logged_in()
+@marshal_with(ItemSchema())
+def get_item(_id):
+    # grab item from the list by id.
+    item = Item.query.get(_id)
+
+    if item is not None:
+        return item
+    else:
         return BAD_REQUEST_JSON_RESPONSE
 
 
