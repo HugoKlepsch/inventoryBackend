@@ -285,6 +285,7 @@ def create_item():
 @marshal_with(JsonApiSchema())
 def logout():
     session.pop('username', None)
+    session.pop('user_id', None)
     return ok_response('Logged out')
 
 
