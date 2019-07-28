@@ -280,6 +280,7 @@ def create_item():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop('username', None)
+    session.pop('user_id', None)
     return json.dumps({
         'msg': 'Ok'
     }), 200, JSON_CT

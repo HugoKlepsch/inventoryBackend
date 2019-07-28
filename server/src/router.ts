@@ -27,7 +27,14 @@ export default new Router({
         // main routes }}}
         // redirects {{{
         { path: '/login', redirect: { name: 'login' } },
-        { path: '/logout', redirect: { name: 'login' } },
+        {
+          path: '/logout',
+          redirect: { name: 'login' },
+        /*  beforeEnter (pageRedirect, originPage, next) {
+            //SOme Stuff will go here. waiting on nick....I think
+
+          }*/
+      },
         // redirects }}}
     ],
 });
