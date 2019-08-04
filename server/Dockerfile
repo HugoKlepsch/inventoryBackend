@@ -12,18 +12,19 @@ RUN mkdir -p /usr/share/man/man1 && \
     iputils-ping \
     curl && \
     rm -rf /var/lib/apt/lists/* && \
-    mkdir inventory
+    mkdir server
 
-RUN mkdir -p inventory/sass && \
-    curl -L https://github.com/sass/dart-sass/releases/download/1.22.3/dart-sass-1.22.3-linux-x64.tar.gz > ./inventory/sass/sass.tar.gz && \
-    cd ./inventory/sass && \
+RUN mkdir -p server/sass && \
+    curl -L https://github.com/sass/dart-sass/releases/download/1.22.3/dart-sass-1.22.3-linux-x64.tar.gz > ./server/sass/sass.tar.gz && \
+    cd ./server/sass && \
     tar -xzvf ./sass.tar.gz && \
     rm ./sass.tar.gz
 
-WORKDIR /inventory
 
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python3 -m venv venv && . venv/bin/activate && pip install --no-cache-dir -r requirements.txt
+
+WORKDIR /server
 
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 ENV NVM_DIR="/root/.nvm"
@@ -37,4 +38,6 @@ RUN ./build.sh
 
 EXPOSE 80
 
-CMD ["./run.sh"]
+WORKDIR /
+
+CMD ["./server/run.sh"]

@@ -2,6 +2,8 @@
 
 export BASE_DIR=$(pwd)
 
+cp git-hook-src/pre-push .git/hooks/pre-push
+
 ./server/sassCheck.sh
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
