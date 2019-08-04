@@ -15,8 +15,9 @@ while [ "$CONTINUE" -ne 0 ]; do
 done
 echo "Database ready"
 
-#FLASK_APP=serverRun.py flask run --host='0.0.0.0' --port=8080
-python serverRun.py
+. /venv/bin/activate
+cd server/
+python -m api_src.api
 
 echo "Job failed, sleeping..."
 while true; do
