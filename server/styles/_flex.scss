@@ -23,6 +23,10 @@ This file will is a 'partial' and can be imported into styles.scss
 .flex-hori {
   @extend %flexy;
   flex-direction: row;
+
+  * {
+    margin-left: 0.5em;
+  }
 }
 
 .flex-page {
@@ -43,3 +47,4 @@ This file will is a 'partial' and can be imported into styles.scss
 section.flex-vert {
   margin-top: 5em;
 }
+

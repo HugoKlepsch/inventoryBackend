@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Login from './views/Login.vue';
 import Signup from './views/Signup.vue';
 import Home from './views/Home.vue';
+import Item from './views/Item.vue';
 
 Vue.use(Router);
 
@@ -23,6 +24,11 @@ export default new Router({
       path: '/home',
       name: 'home',
       component: Home,
+    },
+    {
+      path: '/item',
+      name: 'item',
+      component: Item,
     },
     // main routes }}}
     // redirects {{{
