@@ -4,7 +4,7 @@
     <section id='login-section' class='flex-vert'>
       <div class='flex-vert modal-content'>
         <div class='user-img'>
-          <img src='/img/face-dark-empty.png'>
+          <img src='/img/face-light-empty.png'>
         </div>
         <div v-if='isReqsRevealed' id='reqs'>
           <ul>

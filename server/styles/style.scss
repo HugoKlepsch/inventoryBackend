@@ -36,11 +36,8 @@ $c-base-dark          : rgb(37, 25, 68);
 $c-purple-accent-dark : rgb(36, 0, 51);
 
 // Navbar
-$c-navbar-left   : rgb(41, 15, 83);
-$c-navbar-middle : rgb(56, 9, 121);
-$c-navbar-right  : rgb(51, 0, 42);
-
-$c-body-top : $c-navbar-middle;
+$c-navbar-left   : rgb(108, 56, 193);
+$c-navbar-right  : rgb(55, 0, 131);
 
 $font-stack: Tahoma, Geneva, sans-serif;
 
@@ -62,8 +59,8 @@ html {
 }
 
 body { //{{{
-  background: $c-base-dark;
-  background: linear-gradient(0deg, $c-base-dark 85%, $c-body-top 100%);
+  background: rgb(244,224,255);
+  background: radial-gradient(circle, rgba(244,224,255,1) 0%, rgba(255,255,255,1) 100%);
   background-repeat: no-repeat;
   font-family: $font-stack;
   height: inherit;
@@ -161,8 +158,8 @@ tr:hover {
 }
 
 .modal-content {
-  background: $c-purple-accent-dark;
-  background: radial-gradient(circle, $c-purple-accent-dark 0%, $c-base-dark 48%);
+//  background: $c-purple-accent-dark;
+//  background: radial-gradient(circle, $c-purple-accent-dark 0%, $c-base-dark 48%);
   padding: 20px 20px;
   border-radius: 20px;
   opacity: .9;
@@ -170,7 +167,7 @@ tr:hover {
 
 .nav {
   background: $c-navbar-left;
-  background: linear-gradient(90deg, $c-navbar-left 0%, $c-navbar-middle 75%, $c-navbar-right 100%);
+  background: linear-gradient(90deg, $c-navbar-left 0%, $c-navbar-right 100%);
   color: $c-text-light;
   height: 10%;
   width: 100%;
