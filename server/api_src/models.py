@@ -36,7 +36,7 @@ class Item(DB.Model):
     id = DB.Column(DB.Integer, nullable=False, autoincrement=True, primary_key=True)
     create_date = DB.Column(DB.DateTime, nullable=False, default=datetime.utcnow)
     user_id = DB.Column(DB.Integer, DB.ForeignKey(User.__tablename__ + '.id'), nullable=False)
-    location = DB.Column(DB.Integer, DB.ForeignKey(Location.__tablename__ + '.id'), nullable=True)
+    location_id = DB.Column(DB.Integer, DB.ForeignKey(Location.__tablename__ + '.id'), nullable=True)
     description = DB.Column(DB.Text, nullable=True)
     name = DB.Column(DB.Text, nullable=False)
 
@@ -63,46 +63,46 @@ class PictureSchema(JsonApiSchema):
     """Picture marshmallow schema"""
     _object_class = Picture
 
-    id = fields.Integer()
-    create_date = fields.DateTime()
-    item_id = fields.Integer()
-    path = fields.String()
+    id = fields.Integer(allow_none=False)
+    create_date = fields.DateTime(allow_none=False)
+    item_id = fields.Integer(allow_none=False)
+    path = fields.String(allow_none=False)
 
 
 class LocationSchema(JsonApiSchema):
     """Location marshmallow schema"""
     _object_class = Location
 
-    id = fields.Integer()
-    name = fields.String()
-    user_id = fields.Integer()
+    id = fields.Integer(allow_none=False)
+    name = fields.String(allow_none=False)
+    user_id = fields.Integer(allow_none=False)
 
 
 class ItemSchema(JsonApiSchema):
     """Item marshmallow schema"""
     _object_class = Item
 
-    id = fields.Integer()
-    create_date = fields.DateTime()
-    user_id = fields.Integer()
-    location_id = fields.Integer()
-    description = fields.String()
-    name = fields.String()
-    purchase_date = fields.DateTime()
-    purchase_price = fields.Decimal(places=19, as_string=True)
-    sell_date = fields.DateTime()
-    sell_price = fields.Decimal(places=19, as_string=True)
-    listed_price = fields.Decimal(places=19, as_string=True)
-    pictures = fields.List(fields.Nested(PictureSchema))
+    id = fields.Integer(allow_none=False)
+    create_date = fields.DateTime(allow_none=False)
+    user_id = fields.Integer(allow_none=False)
+    location_id = fields.Integer(allow_none=True)
+    description = fields.String(allow_none=True)
+    name = fields.String(allow_none=True)
+    purchase_date = fields.DateTime(allow_none=True)
+    purchase_price = fields.Decimal(places=19, as_string=True, allow_none=True)
+    sell_date = fields.DateTime(allow_none=True)
+    sell_price = fields.Decimal(places=19, as_string=True, allow_none=True)
+    listed_price = fields.Decimal(places=19, as_string=True, allow_none=True)
+    pictures = fields.List(fields.Nested(PictureSchema), allow_none=True)
 
 
 class UserSchema(JsonApiSchema):
     """User marshmallow schema"""
     _object_class = User
 
-    id = fields.Integer()
-    username = fields.String()
-    email = fields.String()
-    password_hash = fields.String()
-    create_date = fields.DateTime()
-    items = fields.List(fields.Nested(ItemSchema))
+    id = fields.Integer(allow_none=False)
+    username = fields.String(allow_none=False)
+    email = fields.String(allow_none=False)
+    password_hash = fields.String(allow_none=False)
+    create_date = fields.DateTime(allow_none=False)
+    items = fields.List(fields.Nested(ItemSchema), allow_none=False)
