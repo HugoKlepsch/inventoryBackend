@@ -263,7 +263,7 @@ def all_users():
 
 @APP.route('/api/items', methods=['GET'])
 @logged_in()
-@marshal_with(ItemSchema(many=True))
+@marshal_with(ItemSchema(many=True, exclude=['id', 'create_date', 'user_id']))
 def items():
     """
     Get all items for the logged in user.
@@ -300,10 +300,10 @@ def delete_item(item_id):
         return BAD_REQUEST_JSON_RESPONSE
 
 
-@APP.route('/api/item/<int:_id>', methods=['GET'])
+@APP.route('/api/item/<int:item_id>', methods=['GET'])
 @logged_in()
 @marshal_with(ItemSchema())
-def get_item(_id):
+def get_item(item_id):
     """
     Get an item for the logged in user.
 
@@ -311,7 +311,7 @@ def get_item(_id):
     :rtype: Item
     """
     # grab item from the list by id.
-    item = Item.query.get(_id)
+    item = Item.query.get(item_id)
 
     if item is not None:
         return item
@@ -332,7 +332,7 @@ def create_item(item_data):
     :rtype: tuple[dict, int, dict]
     """
     user_id = session['user_id']
-    location = item_data.get('location', None)
+    location_id = item_data.get('location_id', None)
     description = item_data.get('description', None)
     name = item_data.get('name', None)
     purchase_date = item_data.get('purchase_date', None)
@@ -346,7 +346,7 @@ def create_item(item_data):
     APP.logger.info('Creating item %s', name)
     try:
         item = Item(user_id=user_id,
-                    location=location,
+                    location_id=location_id,
                     description=description,
                     name=name,
                     purchase_date=purchase_date,
@@ -360,6 +360,48 @@ def create_item(item_data):
         return ok_response('Added item {name}'.format(name=name))
     except SQLAlchemyError as exception:
         APP.logger.exception('Failed to create item %s: %s', name, exception)
+        return INTERNAL_SERVER_ERROR_JSON_RESPONSE
+
+
+@APP.route('/api/item/<int:item_id>', methods=['PUT'])
+@logged_in()
+@use_args({"item_id": fields.Integer()}, locations=('query',))
+@use_args(ItemSchema(exclude=['id', 'create_date', 'user_id']), locations=('json',))
+@marshal_with(JsonApiSchema())
+def update_item(_, item_data, item_id):
+    """
+    Update an item.
+
+    :param dict _: Unused positional argument that use_args needs.
+    :param dict item_data: Dict with a subset of the Item fields.
+    :param int item_id: id of the item.
+    :return: Status of the request. 200 if valid, 400 or 500 if not.
+    :rtype: tuple[dict, int, dict]
+    """
+    user_id = session['user_id']
+    name = item_data.get('name', None)
+
+    try:
+        item = DB.session.query(Item).filter_by(id=item_id, user_id=user_id)
+        if item is None:
+            return BAD_REQUEST_JSON_RESPONSE
+
+        concrete_item = item.first()
+        item.update({
+            Item.location_id: item_data.get('location_id', None) or concrete_item.location_id,
+            Item.description: item_data.get('description', None) or concrete_item.description,
+            Item.name: item_data.get('name', None) or concrete_item.name,
+            Item.purchase_date: item_data.get('purchase_date', None) or concrete_item.purchase_date,
+            Item.purchase_price: item_data.get('purchase_price', None) or concrete_item.purchase_price,
+            Item.sell_date: item_data.get('sell_date', None) or concrete_item.sell_date,
+            Item.sell_price: item_data.get('sell_price', None) or concrete_item.sell_price,
+            Item.listed_price: item_data.get('listed_price', None) or concrete_item.listed_price
+        })
+
+        DB.session.commit()
+        return ok_response('Updated item {name}'.format(name=name))
+    except SQLAlchemyError as exception:
+        APP.logger.exception('Failed to update item %s, id %d: %s', name, item_id, exception)
         return INTERNAL_SERVER_ERROR_JSON_RESPONSE
 
 
