@@ -1,11 +1,11 @@
 """API main"""
 import argparse
 from functools import wraps
-import hashlib
 import json
 import logging
 import os
 import re
+import bcrypt
 
 from flask import Flask, session, redirect, url_for, send_from_directory
 from flask.logging import create_logger
@@ -60,7 +60,6 @@ def setup_database(_app):  # {{{
         DB.create_all()
         DB.session.commit()
         _app.logger.info('Created databases')
-
         example_user = User.query.filter_by(username='bugmommy').first()
         if example_user is None:
             _app.logger.info('Creating test user')
@@ -104,13 +103,13 @@ def setup_database(_app):  # {{{
 
 def hash_password(password):
     """
-    Hash the password with md5.
+    Hash the password with bcrypt.
 
     :param str password: The password to hash
     :return: The string of hex digits of the hash.
     :rtype: str
     """
-    return hashlib.md5(password.encode()).hexdigest()
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
 
 APP = create_app()
@@ -198,11 +197,15 @@ def login(credentials):
     :rtype: tuple[dict, int, dict]
     """
     username = credentials['username']
-    password_hash = hash_password(credentials['password'])
 
-    user = User.query.filter_by(username=username, password_hash=password_hash).first()
+    user = User.query.filter_by(username=username).first()
 
     if user is None:
+        return BAD_REQUEST_JSON_RESPONSE
+
+
+    # this check using the built in salt.
+    if not bcrypt.checkpw(credentials['password'].encode('utf-8'), user.password_hash):
         return BAD_REQUEST_JSON_RESPONSE
 
     session['username'] = username

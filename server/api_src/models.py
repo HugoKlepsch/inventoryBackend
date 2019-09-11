@@ -15,7 +15,7 @@ class User(DB.Model):
     id = DB.Column(DB.Integer, nullable=False, autoincrement=True, primary_key=True)
     username = DB.Column(DB.String(80), unique=True, nullable=False)
     email = DB.Column(DB.String(120), nullable=False)
-    password_hash = DB.Column(DB.String(64), nullable=False)
+    password_hash = DB.Column(DB.LargeBinary, nullable=False)
     create_date = DB.Column(DB.DateTime, nullable=False, default=datetime.utcnow)
     items = DB.relationship('Item', backref='user', lazy=True)
 
