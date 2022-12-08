@@ -1,6 +1,6 @@
 apispec==2.0.2
 astroid==2.2.5
-certifi==2019.6.16
+certifi==2022.12.7
 chardet==3.0.4
 Click==7.0
 Flask==1.1.1
